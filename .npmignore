@@ -1,0 +1,14 @@
+src/
+tsconfig.json
+*.log
+.DS_Store
+.env
+.env.local
+node_modules/
+examples/
+.github/workflows/
+.github/copilot-instructions.md
+CONTRIBUTING.md
+PUBLISHING.md
+TESTING.md
+CHECKLIST.md

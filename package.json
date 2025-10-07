@@ -1,0 +1,49 @@
+{
+  "name": "playwright-wizard-mcp",
+  "version": "0.1.0",
+  "description": "MCP server providing Playwright test generation wizard with intelligent prompts and best practices",
+  "type": "module",
+  "bin": {
+    "playwright-wizard-mcp": "./build/index.js"
+  },
+  "files": [
+    "build",
+    ".github/prompts"
+  ],
+  "scripts": {
+    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+    "prepare": "npm run build",
+    "watch": "tsc --watch",
+    "dev": "tsx src/index.ts"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "playwright",
+    "testing",
+    "test-generation",
+    "e2e",
+    "automation"
+  ],
+  "author": "Oğuz Ceylan <therealoguzceylan@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oguzc/playwright-wizard-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/oguzc/playwright-wizard-mcp/issues"
+  },
+  "homepage": "https://github.com/oguzc/playwright-wizard-mcp#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

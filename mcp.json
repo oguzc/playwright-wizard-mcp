@@ -1,0 +1,20 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schema/server-config.json",
+  "name": "playwright-wizard-mcp",
+  "description": "MCP server providing Playwright test generation wizard with intelligent prompts and best practices",
+  "version": "0.1.0",
+  "homepage": "https://github.com/oguzc/playwright-wizard-mcp",
+  "license": "MIT",
+  "capabilities": {
+    "prompts": {
+      "listChanged": false
+    },
+    "tools": {
+      "listChanged": false
+    }
+  },
+  "vendor": {
+    "name": "Playwright Wizard",
+    "url": "https://github.com/oguzc/playwright-wizard-mcp"
+  }
+}
