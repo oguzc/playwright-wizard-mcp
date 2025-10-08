@@ -142,12 +142,15 @@ async function testServer() {
   // Test listing tools
   console.log('\nTesting tools/list...');
   const tools = await client.listTools();
-  console.log('Available tools:', tools.tools.map(t => t.name));
+  // List available prompts
+  console.log('Testing prompts/list...');
+  const prompts = await client.listPrompts();
+  console.log('Available prompts:', prompts.prompts.map(p => p.name));
 
-  // Test calling a tool
-  console.log('\nTesting tools/call...');
-  const result = await client.callTool({ name: 'get-architecture' });
-  console.log('Tool result:', result.content[0].text.substring(0, 100) + '...');
+  // Get a specific prompt
+  console.log('\nTesting prompts/get...');
+  const prompt = await client.getPrompt('analyze-app');
+  console.log('Prompt content length:', prompt.messages[0].content.text.length);
 
   await client.close();
   console.log('\n✅ All tests passed!');
@@ -172,15 +175,11 @@ Run through this checklist:
 - [ ] No TypeScript compilation errors
 
 ### Prompts
-- [ ] Lists all 11 prompts (8 core + 2 optional + 3 reference)
+- [ ] Lists all 13 prompts (6 core + 2 optional + 5 reference)
 - [ ] Can fetch `analyze-app` prompt
-- [ ] Can fetch `reference/mcp-setup` prompt
+- [ ] Can fetch `reference/core-principles` prompt
+- [ ] Can fetch `reference/workflow-overview` prompt
 - [ ] Prompt content matches the markdown files
-
-### Tools
-- [ ] Lists `get-architecture` tool
-- [ ] Tool returns PROMPT-ARCHITECTURE.md content
-- [ ] Tool call completes without errors
 
 ### Files
 - [ ] All prompt files in `.github/prompts/` are accessible

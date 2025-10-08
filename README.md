@@ -1,6 +1,13 @@
 # Playwright Wizard MCP Server
 
-> 🧙‍♂️ An intelligent Model Context Protocol (MCP) server that guides you through creating professional Playwright test suites with best practices built in.
+> 🧙‍♂️ An intelligent Model Context Protocol (MCP) server that guiAll workflow documentation files are created in `.playwright-wizard-mcp/`:
+
+- `project-config.md` - Detected tech stack
+- `pages.md` - Page analysis with DOM quality scores
+- `selector-strategy.md` - Selector approach per page
+- `test-plan.md` - Test suites with progress tracking
+
+> **Note:** The `.playwright-wizard-mcp/` folder is for workflow tracking only. You may want to add it to `.gitignore`.ough creating professional Playwright test suites with best practices built in.
 
 [![npm version](https://img.shields.io/npm/v/playwright-wizard-mcp.svg)](https://www.npmjs.com/package/playwright-wizard-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -80,6 +87,8 @@ Add to your MCP settings:
 
 ### Reference Documentation
 
+- **reference/core-principles** - Core testing principles that guide all implementations
+- **reference/workflow-overview** - High-level workflow guide and prompt relationships
 - **reference/mcp-setup** - MCP setup and usage patterns
 - **reference/selector-strategies** - Selector strategies and HTML quality scoring
 - **reference/fixture-patterns** - Playwright fixture patterns for parallel execution
@@ -93,9 +102,17 @@ Use the prompts in sequence to build a complete test suite:
 2. Use "generate-test-plan" to create test scenarios
 3. Use "setup-infrastructure" to configure Playwright
 4. Use "generate-page-objects" to create page models
-5. Use "implement-test-suite" to write tests
+5. Use "implement-test-suite" to write tests (repeat for each suite)
 6. Use "review-and-optimize" to finalize
 ```
+
+All workflow documentation files are created in `.playwright-wizard-mcp/` folder in your project root:
+- `project-config.md` - Detected tech stack
+- `pages.md` - Page analysis with DOM quality scores
+- `selector-strategy.md` - Selector approach per page
+- `test-plan.md` - Test suites with progress tracking
+
+> **Note:** The `.playwright-wizard-mcp/` folder is for workflow tracking only. You may want to add it to `.gitignore`.
 
 ## Tools
 

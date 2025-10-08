@@ -87,7 +87,11 @@ The assistant will load the prompt and guide you through analyzing your applicat
 ## What's Next?
 
 - Try the **optional prompts** for accessibility or API testing
-- Check the **reference documentation** for advanced patterns
-- Use the `get-architecture` tool to understand the prompt design
+- Check the **reference documentation** for advanced patterns:
+  - `reference/core-principles` - Core testing principles
+  - `reference/workflow-overview` - Complete workflow guide
+  - `reference/mcp-setup` - MCP usage patterns
+  - `reference/selector-strategies` - Selector best practices
+  - `reference/fixture-patterns` - Parallel execution patterns
 
 Happy testing! 🎭✨

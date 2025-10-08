@@ -12,5 +12,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 6-step wizard workflow for test generation
 - Core prompts: analyze-app, generate-test-plan, setup-infrastructure, generate-page-objects, implement-test-suite, review-and-optimize
 - Optional prompts: add-accessibility, add-api-testing
-- Reference documentation: mcp-setup, selector-strategies, fixture-patterns
-- get-architecture tool for prompt architecture documentation
+- Reference documentation: core-principles, workflow-overview, mcp-setup, selector-strategies, fixture-patterns
+- Workflow tracking in `.playwright-wizard-mcp/` folder

@@ -86,9 +86,9 @@ After adding the configuration:
 3. Try using a prompt:
    - Type `/prompt` or use the prompts interface
    - Look for prompts like `analyze-app`, `generate-test-plan`, etc.
-4. Try using the tool:
-   - Ask "Show me the architecture documentation"
-   - This should trigger the `get-architecture` tool
+4. Try a reference prompt:
+   - Ask "Show me the core testing principles"
+   - This should load the `reference/core-principles` prompt
 
 ## Troubleshooting
 
