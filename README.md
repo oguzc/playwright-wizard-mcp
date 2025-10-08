@@ -146,14 +146,6 @@ npm run dev
 
 Contributions welcome! Please open an issue or PR.
 
-### Release Process
-
-This project uses automated publishing to both NPM and MCP Registry:
-
-- **NPM**: Published automatically on GitHub releases
-- **MCP Registry**: Also published automatically via GitHub Actions
-- See [RELEASE.md](RELEASE.md) for detailed release process
-
 ## License
 
 MIT
