@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "io.github.oguzc/playwright-wizard-mcp",
+  "title": "Playwright Wizard MCP",
+  "description": "MCP server providing Playwright test generation wizard with intelligent prompts and best practices",
+  "version": "0.1.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "playwright-wizard-mcp",
+      "version": "0.1.1",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
