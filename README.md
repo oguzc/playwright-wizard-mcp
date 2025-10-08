@@ -1,15 +1,9 @@
 # Playwright Wizard MCP Server
 
-> 🧙‍♂️ An intelligent Model Context Protocol (MCP) server that guiAll workflow documentation files are created in `.playwright-wizard-mcp/`:
-
-- `project-config.md` - Detected tech stack
-- `pages.md` - Page analysis with DOM quality scores
-- `selector-strategy.md` - Selector approach per page
-- `test-plan.md` - Test suites with progress tracking
-
-> **Note:** The `.playwright-wizard-mcp/` folder is for workflow tracking only. You may want to add it to `.gitignore`.ough creating professional Playwright test suites with best practices built in.
+> 🧙‍♂️ An intelligent Model Context Protocol (MCP) server that guides you through creating professional Playwright test suites with best practices built in.
 
 [![npm version](https://img.shields.io/npm/v/playwright-wizard-mcp.svg)](https://www.npmjs.com/package/playwright-wizard-mcp)
+[![MCP Registry](https://img.shields.io/badge/MCP%20Registry-Available-blue)](https://registry.modelcontextprotocol.io/v0/servers?search=playwright-wizard-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Overview
@@ -23,8 +17,11 @@ Playwright Wizard MCP provides a structured, step-by-step approach to building c
 - 🎯 **Best practices** for selectors, fixtures, and parallel execution
 - 🔧 **Optional enhancements** for accessibility and API testing
 - 📖 **Reference documentation** for advanced patterns
+- 🌐 **MCP Registry integration** for easy discovery and installation
 
 ## Installation
+
+### From NPM
 
 ```bash
 npm install -g playwright-wizard-mcp
@@ -35,6 +32,10 @@ Or install locally:
 ```bash
 npm install playwright-wizard-mcp
 ```
+
+### From MCP Registry
+
+This server is also available in the official [MCP Registry](https://registry.modelcontextprotocol.io/v0/servers?search=playwright-wizard-mcp), making it easily discoverable by MCP-compatible clients.
 
 ## Usage
 
@@ -97,7 +98,7 @@ Add to your MCP settings:
 
 Use the prompts in sequence to build a complete test suite:
 
-```
+```text
 1. Use "analyze-app" prompt to understand your application
 2. Use "generate-test-plan" to create test scenarios
 3. Use "setup-infrastructure" to configure Playwright
@@ -107,6 +108,7 @@ Use the prompts in sequence to build a complete test suite:
 ```
 
 All workflow documentation files are created in `.playwright-wizard-mcp/` folder in your project root:
+
 - `project-config.md` - Detected tech stack
 - `pages.md` - Page analysis with DOM quality scores
 - `selector-strategy.md` - Selector approach per page
@@ -140,10 +142,18 @@ npm run build
 npm run dev
 ```
 
-## License
-
-MIT
-
 ## Contributing
 
 Contributions welcome! Please open an issue or PR.
+
+### Release Process
+
+This project uses automated publishing to both NPM and MCP Registry:
+
+- **NPM**: Published automatically on GitHub releases
+- **MCP Registry**: Also published automatically via GitHub Actions
+- See [RELEASE.md](RELEASE.md) for detailed release process
+
+## License
+
+MIT
