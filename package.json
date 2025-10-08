@@ -2,6 +2,7 @@
   "name": "playwright-wizard-mcp",
   "version": "0.1.1",
   "description": "MCP server providing Playwright test generation wizard with intelligent prompts and best practices",
+  "mcpName": "io.github.oguzc/playwright-wizard-mcp",
   "type": "module",
   "bin": {
     "playwright-wizard-mcp": "./build/index.js"
