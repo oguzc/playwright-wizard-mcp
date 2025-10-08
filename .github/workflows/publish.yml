@@ -56,19 +56,35 @@ jobs:
           jq --arg v "$VERSION" '.version = $v | .packages[0].version = $v' server.json > tmp && mv tmp server.json
 
       - name: Install MCP Publisher
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 5
-          max_attempts: 3
-          retry_wait_seconds: 15
-          command: |
-            curl -L "https://github.com/modelcontextprotocol/registry/releases/download/latest/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
-            chmod +x mcp-publisher
+        run: |
+          # Get the latest release tag
+          LATEST_TAG=$(curl -s https://api.github.com/repos/modelcontextprotocol/registry/releases/latest | jq -r .tag_name)
+          if [[ "$LATEST_TAG" == "null" || -z "$LATEST_TAG" ]]; then
+            echo "⚠️  No MCP Publisher release found, skipping MCP Registry publishing"
+            exit 1
+          fi
+          
+          echo "📦 Installing MCP Publisher $LATEST_TAG"
+          ARCH=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
+          OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+          
+          # Extract version number from tag (e.g., v1.2.3 -> 1.2.3)
+          VERSION=${LATEST_TAG#v}
+          
+          # Download with correct naming pattern: mcp-publisher_VERSION_OS_ARCH.tar.gz
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/download/$LATEST_TAG/mcp-publisher_${VERSION}_${OS}_${ARCH}.tar.gz" | tar xz
+          chmod +x mcp-publisher
 
       - name: Login to MCP Registry
         id: mcp-login
         continue-on-error: true
-        run: ./mcp-publisher login github-oidc
+        run: |
+          if [[ -f "./mcp-publisher" ]]; then
+            ./mcp-publisher login github-oidc
+          else
+            echo "⚠️  MCP Publisher not available, skipping login"
+            exit 1
+          fi
 
       - name: Publish to MCP Registry
         id: mcp-publish
@@ -78,7 +94,10 @@ jobs:
         
       - name: MCP Registry publish status
         run: |
-          if [[ "${{ steps.mcp-login.outcome }}" != "success" ]]; then
+          if [[ ! -f "./mcp-publisher" ]]; then
+            echo "⚠️  MCP Publisher not installed - MCP Registry publishing skipped"
+            echo "📝 You can manually publish later using: https://registry.modelcontextprotocol.io"
+          elif [[ "${{ steps.mcp-login.outcome }}" != "success" ]]; then
             echo "⚠️  MCP Registry login failed - check OIDC configuration"
           elif [[ "${{ steps.mcp-publish.outcome }}" != "success" ]]; then
             echo "⚠️  MCP Registry publish failed - manual publish may be needed"
