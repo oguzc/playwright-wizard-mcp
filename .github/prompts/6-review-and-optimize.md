@@ -324,20 +324,13 @@ All tests are parallel-safe:
 
 ---
 
-## Done!
+## Output Checklist
 
-```
-🎉 Test suite complete and optimized!
-
-Summary:
-- 45 tests passing
-- Parallel-safe (tested with 1,2,4,8 workers)
-- Performance optimized (41% faster)
-- CI/CD pipeline active
-- Documentation complete
-
-Next steps:
-- Run optional prompts if needed (API testing, accessibility, etc.)
-- Add more test suites as features grow
-- Monitor test health in CI
-```
+- [ ] All tests pass with workers=1,2,4,8
+- [ ] No hardcoded test data found
+- [ ] No shared state in POMs
+- [ ] No `.only` or `.skip` in code
+- [ ] No `waitForTimeout()` calls remaining
+- [ ] Auth state reused where applicable
+- [ ] Performance report created
+- [ ] TESTING.md documentation created

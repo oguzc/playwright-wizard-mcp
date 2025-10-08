@@ -256,5 +256,3 @@ When tests fail, axe-core provides:
 - Better SEO
 - Legal compliance (WCAG, ADA, Section 508)
 - Improved UX for everyone
-
-**Next:** Continue with other optional prompts

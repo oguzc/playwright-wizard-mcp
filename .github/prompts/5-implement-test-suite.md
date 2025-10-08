@@ -2,7 +2,7 @@
 
 > **REPEATABLE** - Run multiple times, picks next unchecked suite
 
-**Input:** `test-plan.md` (from `tests/docs/`)
+**Input:** `test-plan.md` (from `.playwright-wizard-mcp/`)
 
 **Output:**
 
@@ -43,7 +43,7 @@ const snapshot = await mcp_playwright_browser_snapshot();
 ### Step 1: Read Test Plan
 
 ```bash
-cat tests/docs/test-plan.md
+cat .playwright-wizard-mcp/test-plan.md
 ```
 
 Find first `[ ]` unchecked suite
@@ -289,5 +289,3 @@ When tests fail:
 - [ ] No `.only` or `.skip`
 - [ ] Suite marked `[x]` in `test-plan.md`
 - [ ] Progress updated
-
-**Next:** Run this prompt again for next suite, or Prompt 6 when all complete

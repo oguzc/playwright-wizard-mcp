@@ -2,11 +2,11 @@
 
 > Break testing into focused suites with progress tracking
 
-**Input:** `project-config.md`, `pages.md`, `selector-strategy.md` (from `tests/docs/`)
+**Input:** `project-config.md`, `pages.md`, `selector-strategy.md` (from `.playwright-wizard-mcp/`)
 
 **Output:** `test-plan.md` with test suites + checkboxes
 
-> **Note:** Read from and write to `tests/docs/` folder
+> **Note:** Read from and write to `.playwright-wizard-mcp/` folder
 
 ---
 
@@ -67,7 +67,7 @@ Create a test plan with:
 
 ---
 
-Create `tests/docs/test-plan.md`:
+Create `.playwright-wizard-mcp/test-plan.md`:
 
 ```markdown
 # Test Plan
@@ -202,5 +202,3 @@ Create `tests/docs/test-plan.md`:
 - [ ] Dependencies documented
 - [ ] Test data requirements clear
 - [ ] Quality gates defined for each suite
-
-**Next:** Run Prompt 3 to setup infrastructure

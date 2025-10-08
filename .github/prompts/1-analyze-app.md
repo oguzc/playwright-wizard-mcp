@@ -9,7 +9,7 @@
 - `selector-strategy.md` - Which pages need test IDs
 - CODE - Test IDs added to source (if needed)
 
-> **Note:** Create all `.md` files in `tests/docs/` folder
+> **Note:** Create all `.md` files in `.playwright-wizard-mcp/` folder
 
 ---
 
@@ -60,7 +60,7 @@ cat package.json
 - Monorepo (Turborepo, Nx, pnpm workspaces)
 - Styling (Tailwind, CSS Modules, styled-components)
 
-**Create `tests/docs/project-config.md`:**
+**Create `.playwright-wizard-mcp/project-config.md`:**
 
 ```markdown
 # Project Stack
@@ -115,7 +115,7 @@ For EACH page found:
 - ❌ **-15:** Inputs without labels
 - ❌ **-15:** Generic divs for everything
 
-**Create `tests/docs/pages.md`:**
+**Create `.playwright-wizard-mcp/pages.md`:**
 
 ```markdown
 # Application Pages
@@ -160,7 +160,7 @@ Apply decision matrix:
 | 50-79% | ⚠️ Selective test IDs - Only problematic elements |
 | 0-49% | ❌ Full test IDs - Add to all interactive elements |
 
-**Create `tests/docs/selector-strategy.md`:**
+**Create `.playwright-wizard-mcp/selector-strategy.md`:**
 
 ```markdown
 # Selector Strategy
@@ -236,10 +236,8 @@ await expect(page.getByTestId('dashboard-logout-btn')).toBeVisible();
 
 ## Output Checklist
 
-- [ ] `tests/docs/project-config.md` created with stack detection
-- [ ] `tests/docs/pages.md` created with all pages + scores
-- [ ] `tests/docs/selector-strategy.md` created with per-page strategy
+- [ ] `.playwright-wizard-mcp/project-config.md` created with stack detection
+- [ ] `.playwright-wizard-mcp/pages.md` created with all pages + scores
+- [ ] `.playwright-wizard-mcp/selector-strategy.md` created with per-page strategy
 - [ ] Test IDs added to source (if any pages scored <80%)
 - [ ] All selectors verified with MCP
-
-**Next:** Run Prompt 2 to generate test plan

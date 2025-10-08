@@ -2,7 +2,7 @@
 
 > Create ALL infrastructure in one shot
 
-**Input:** `project-config.md` (from `tests/docs/`)
+**Input:** `project-config.md` (from `.playwright-wizard-mcp/`)
 
 **Output:** ALL infrastructure code
 
@@ -367,5 +367,3 @@ npx playwright test --project=chromium
 - [ ] Package scripts added
 - [ ] Playwright installed (`npx playwright install`)
 - [ ] Config validated (`npx playwright test --list`)
-
-**Next:** Run Prompt 4 to generate Page Objects

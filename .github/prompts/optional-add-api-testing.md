@@ -235,5 +235,3 @@ npx playwright test
 - [ ] API test suite created
 - [ ] Config updated for API tests
 - [ ] Tests pass: `npx playwright test --project=api`
-
-**Next:** Continue with other optional prompts or add more tests

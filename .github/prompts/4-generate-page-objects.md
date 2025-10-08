@@ -2,7 +2,7 @@
 
 > Create POMs using selectors from Prompt 1, verify with MCP
 
-**Input:** `selector-strategy.md`, `pages.md` (from `tests/docs/`)
+**Input:** `selector-strategy.md`, `pages.md` (from `.playwright-wizard-mcp/`)
 
 **Output:** CODE
 
@@ -291,5 +291,3 @@ Follow this order (from `selector-strategy.md`):
 - [ ] JSDoc comments on all methods
 - [ ] POMs are stateless
 - [ ] Methods return data (no assertions)
-
-**Next:** Run Prompt 5 to implement test suites
