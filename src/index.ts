@@ -53,6 +53,14 @@ const PROMPTS = {
 };
 
 const REFERENCES = {
+  "core-principles": {
+    path: ".github/prompts/reference/core-principles.md",
+    description: "Core testing principles that guide all implementations",
+  },
+  "workflow-overview": {
+    path: ".github/prompts/reference/workflow-overview.md",
+    description: "High-level workflow guide and prompt relationships",
+  },
   "mcp-setup": {
     path: ".github/prompts/reference/mcp-setup.md",
     description: "MCP setup and usage patterns",
@@ -161,37 +169,12 @@ server.setRequestHandler(GetPromptRequestSchema, async (request) => {
 
 // List available tools
 server.setRequestHandler(ListToolsRequestSchema, async () => {
-  const tools: Tool[] = [
-    {
-      name: "get-architecture",
-      description: "Get the prompt architecture documentation explaining the wizard workflow",
-      inputSchema: {
-        type: "object",
-        properties: {},
-      },
-    },
-  ];
-
-  return { tools };
+  return { tools: [] };
 });
 
 // Handle tool calls
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name } = request.params;
-
-  if (name === "get-architecture") {
-    const content = await readPromptFile(".github/prompts/PROMPT-ARCHITECTURE.md");
-    
-    return {
-      content: [
-        {
-          type: "text",
-          text: content,
-        },
-      ],
-    };
-  }
-
   throw new Error(`Unknown tool: ${name}`);
 });
 
