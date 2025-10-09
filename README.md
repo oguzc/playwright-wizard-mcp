@@ -72,39 +72,56 @@ Add to your MCP settings:
 
 ## Available Prompts
 
+The server exposes workflow tools that guide Copilot through each phase of test creation. When you call these tools, Copilot receives detailed instructions and executes them automatically - you see the results, not the instructions.
+
 ### Core Wizard Flow
 
-1. **analyze-app** - Analyze application structure and create test strategy
-2. **generate-test-plan** - Generate comprehensive test plan with scenarios
-3. **setup-infrastructure** - Setup Playwright infrastructure with fixtures and config
-4. **generate-page-objects** - Generate page object models with optimal selectors
+Use these tools in sequence to build a complete test suite:
+
+1. **analyze-app** - Start here: Analyze app structure, detect tech stack, browse pages, evaluate DOM quality
+2. **generate-test-plan** - Create detailed test plan with scenarios and acceptance criteria
+3. **setup-infrastructure** - Setup Playwright config, fixtures, and folder structure
+4. **generate-page-objects** - Generate type-safe page object models with optimal selectors
 5. **implement-test-suite** - Implement complete test suite with best practices
-6. **review-and-optimize** - Review and optimize test suite for quality and performance
+6. **review-and-optimize** - Review and optimize for quality and performance
 
 ### Optional Enhancements
 
-- **add-accessibility** - Add accessibility testing to existing suite
-- **add-api-testing** - Add API testing capabilities to test suite
+- **add-accessibility** - Add axe-core accessibility testing
+- **add-api-testing** - Add API testing capabilities
 
 ### Reference Documentation
 
-- **reference/core-principles** - Core testing principles that guide all implementations
-- **reference/workflow-overview** - High-level workflow guide and prompt relationships
-- **reference/mcp-setup** - MCP setup and usage patterns
-- **reference/selector-strategies** - Selector strategies and HTML quality scoring
-- **reference/fixture-patterns** - Playwright fixture patterns for parallel execution
+- **reference-core-principles** - Core testing principles
+- **reference-workflow-overview** - Workflow guide
+- **reference-mcp-setup** - MCP setup instructions
+- **reference-selector-strategies** - Selector strategies and HTML quality scoring
+- **reference-fixture-patterns** - Playwright fixture patterns
+
+## How It Works
+
+When you ask Copilot to help with Playwright testing:
+
+1. **You**: "Help me analyze my app for testing"
+2. **Copilot**: Calls the `analyze-app` tool
+3. **Tool**: Returns detailed instructions to Copilot
+4. **Copilot**: Executes the instructions (detects stack, browses pages, creates files)
+5. **You see**: "✅ Analysis complete! Created project-config.md, pages.md..."
+
+**You see results, not prompts.** The tools provide Copilot with expert-level instructions that it follows automatically.
 
 ## Example Workflow
 
-Use the prompts in sequence to build a complete test suite:
+```bash
+# In your app project, ask Copilot:
+"Help me set up Playwright testing for this app"
 
-```text
-1. Use "analyze-app" prompt to understand your application
-2. Use "generate-test-plan" to create test scenarios
-3. Use "setup-infrastructure" to configure Playwright
-4. Use "generate-page-objects" to create page models
-5. Use "implement-test-suite" to write tests (repeat for each suite)
-6. Use "review-and-optimize" to finalize
+# Copilot will:
+# 1. Call analyze-app → detect stack, browse pages
+# 2. Call generate-test-plan → create test scenarios
+# 3. Call setup-infrastructure → create config and fixtures
+# 4. Call generate-page-objects → create page models
+# 5. Call implement-test-suite → write actual tests
 ```
 
 All workflow documentation files are created in `.playwright-wizard-mcp/` folder in your project root:
