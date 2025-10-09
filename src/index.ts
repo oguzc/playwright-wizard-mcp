@@ -19,35 +19,35 @@ const __dirname = dirname(__filename);
 // Prompt file mappings
 const PROMPTS = {
   "analyze-app": {
-    path: ".github/prompts/1-analyze-app.md",
+    path: ".github/prompts/1-analyze-app.prompt.md",
     description: "Start here: Analyze the application - detect tech stack from package.json, browse pages using Playwright MCP, evaluate DOM quality, and create test strategy files (project-config.md, pages.md, selector-strategy.md)",
   },
   "generate-test-plan": {
-    path: ".github/prompts/2-generate-test-plan.md",
+    path: ".github/prompts/2-generate-test-plan.prompt.md",
     description: "Step 2: Generate test plan - create detailed test scenarios with user flows, edge cases, acceptance criteria, and test data based on the analysis",
   },
   "setup-infrastructure": {
-    path: ".github/prompts/3-setup-infrastructure.md",
+    path: ".github/prompts/3-setup-infrastructure.prompt.md",
     description: "Step 3: Setup infrastructure - create Playwright config, fixtures for parallel execution, test helpers, and proper folder structure",
   },
   "generate-page-objects": {
-    path: ".github/prompts/4-generate-page-objects.md",
+    path: ".github/prompts/4-generate-page-objects.prompt.md",
     description: "Step 4: Generate page objects - create type-safe page object models with optimal selectors (getByRole/Label preferred, test IDs when needed)",
   },
   "implement-test-suite": {
-    path: ".github/prompts/5-implement-test-suite.md",
+    path: ".github/prompts/5-implement-test-suite.prompt.md",
     description: "Step 5: Implement tests - write complete test suite using page objects, with proper assertions, error handling, and parallel execution",
   },
   "review-and-optimize": {
-    path: ".github/prompts/6-review-and-optimize.md",
+    path: ".github/prompts/6-review-and-optimize.prompt.md",
     description: "Step 6: Review & optimize - analyze test quality, fix flaky tests, improve performance, check coverage, and ensure best practices",
   },
   "add-accessibility": {
-    path: ".github/prompts/optional-add-accessibility.md",
+    path: ".github/prompts/optional-add-accessibility.prompt.md",
     description: "Optional: Add accessibility testing - integrate axe-core, add WCAG 2.1 AA compliance checks, and test keyboard navigation",
   },
   "add-api-testing": {
-    path: ".github/prompts/optional-add-api-testing.md",
+    path: ".github/prompts/optional-add-api-testing.prompt.md",
     description: "Optional: Add API testing - test REST/GraphQL/tRPC APIs with request/response validation and integration with UI tests",
   },
 };
