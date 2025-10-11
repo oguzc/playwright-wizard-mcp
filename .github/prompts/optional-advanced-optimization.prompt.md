@@ -1,10 +1,13 @@
-# Prompt 6: Review & Optimize 🎯
+# Optional: Advanced Optimization 🚀
 
-> Final audit - parallel safety + performance
+> **When to use:** Tests work but need maximum performance or advanced patterns
+> **Prerequisites:** Complete Step 5 (implement-test-suite) first
 
-**Input:** All test files
-
-**Output:** Analysis + CODE fixes
+**Note:** Basic optimization is already included in Step 5. This prompt is for:
+- Large test suites (100+ tests) needing aggressive optimization
+- Advanced auth state reuse patterns
+- Complex parallel execution tuning
+- Reusable setup/teardown patterns
 
 ---
 
@@ -326,6 +329,7 @@ All tests are parallel-safe:
 
 ## Output Checklist
 
+- [ ] **Final TypeScript check: `npx tsc --noEmit` passes**
 - [ ] All tests pass with workers=1,2,4,8
 - [ ] No hardcoded test data found
 - [ ] No shared state in POMs
@@ -334,3 +338,5 @@ All tests are parallel-safe:
 - [ ] Auth state reused where applicable
 - [ ] Performance report created
 - [ ] TESTING.md documentation created
+- [ ] **All page objects properly integrated in fixtures**
+- [ ] **No manual `new PageName(page)` in test files**
