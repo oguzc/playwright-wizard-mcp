@@ -59,13 +59,21 @@ After configuration:
 
 ## The Wizard Workflow
 
+**Core Steps (Complete Test Suite):**
 ```
 1. analyze-app           → Understand your application
 2. generate-test-plan    → Create test scenarios
 3. setup-infrastructure  → Configure Playwright
 4. generate-page-objects → Build page models
-5. implement-test-suite  → Write the tests
-6. review-and-optimize   → Finalize and improve
+5. implement-test-suite  → Write, verify & optimize tests
+```
+
+**Optional Enhancements:**
+```
+- setup-ci-cd           → Add GitHub Actions
+- add-accessibility     → Add axe-core testing  
+- add-api-testing       → Add API test coverage
+- advanced-optimization → Auth state, perf tuning
 ```
 
 ## Example Usage

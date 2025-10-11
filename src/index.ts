@@ -5,8 +5,6 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
-  ListPromptsRequestSchema,
-  GetPromptRequestSchema,
   Tool,
 } from "@modelcontextprotocol/sdk/types.js";
 import { readFile } from "fs/promises";
@@ -20,35 +18,39 @@ const __dirname = dirname(__filename);
 const PROMPTS = {
   "analyze-app": {
     path: ".github/prompts/1-analyze-app.prompt.md",
-    description: "Start here: Analyze the application - detect tech stack from package.json, browse pages using Playwright MCP, evaluate DOM quality, and create test strategy files (project-config.md, pages.md, selector-strategy.md)",
+    description: "⚠️ CALL THIS TOOL IMMEDIATELY to get full workflow instructions. Step 1: Analyze the application - detect tech stack from package.json, browse pages using Playwright MCP, evaluate DOM quality, and create test strategy files (project-config.md, pages.md, selector-strategy.md)",
   },
   "generate-test-plan": {
     path: ".github/prompts/2-generate-test-plan.prompt.md",
-    description: "Step 2: Generate test plan - create detailed test scenarios with user flows, edge cases, acceptance criteria, and test data based on the analysis",
+    description: "⚠️ CALL THIS TOOL IMMEDIATELY to get full workflow instructions. Step 2: Generate test plan - create detailed test scenarios with user flows, edge cases, acceptance criteria, and test data based on the analysis",
   },
   "setup-infrastructure": {
     path: ".github/prompts/3-setup-infrastructure.prompt.md",
-    description: "Step 3: Setup infrastructure - create Playwright config, fixtures for parallel execution, test helpers, and proper folder structure",
+    description: "⚠️ CALL THIS TOOL IMMEDIATELY to get full workflow instructions. Step 3: Setup infrastructure - create Playwright config, fixtures for parallel execution, test helpers, and proper folder structure",
   },
   "generate-page-objects": {
     path: ".github/prompts/4-generate-page-objects.prompt.md",
-    description: "Step 4: Generate page objects - create type-safe page object models with optimal selectors (getByRole/Label preferred, test IDs when needed)",
+    description: "⚠️ CALL THIS TOOL IMMEDIATELY to get full workflow instructions. Step 4: Generate page objects - create type-safe page object models with optimal selectors (getByRole/Label preferred, test IDs when needed)",
   },
   "implement-test-suite": {
     path: ".github/prompts/5-implement-test-suite.prompt.md",
-    description: "Step 5: Implement tests - write complete test suite using page objects, with proper assertions, error handling, and parallel execution",
+    description: "⚠️ CALL THIS TOOL IMMEDIATELY to get full workflow instructions. Step 5: Implement & verify tests - write complete test suite using page objects, with proper assertions, error handling, parallel execution verification, and performance optimization",
   },
-  "review-and-optimize": {
-    path: ".github/prompts/6-review-and-optimize.prompt.md",
-    description: "Step 6: Review & optimize - analyze test quality, fix flaky tests, improve performance, check coverage, and ensure best practices",
+  "setup-ci-cd": {
+    path: ".github/prompts/optional-setup-ci-cd.prompt.md",
+    description: "⚠️ CALL THIS TOOL IMMEDIATELY to get full workflow instructions. Optional: Setup CI/CD - add GitHub Actions workflow for automated testing with parallel execution and artifact reporting",
   },
   "add-accessibility": {
     path: ".github/prompts/optional-add-accessibility.prompt.md",
-    description: "Optional: Add accessibility testing - integrate axe-core, add WCAG 2.1 AA compliance checks, and test keyboard navigation",
+    description: "⚠️ CALL THIS TOOL IMMEDIATELY to get full workflow instructions. Optional: Add accessibility testing - integrate axe-core, add WCAG 2.1 AA compliance checks, and test keyboard navigation",
   },
   "add-api-testing": {
     path: ".github/prompts/optional-add-api-testing.prompt.md",
-    description: "Optional: Add API testing - test REST/GraphQL/tRPC APIs with request/response validation and integration with UI tests",
+    description: "⚠️ CALL THIS TOOL IMMEDIATELY to get full workflow instructions. Optional: Add API testing - test REST/GraphQL/tRPC APIs with request/response validation and integration with UI tests",
+  },
+  "advanced-optimization": {
+    path: ".github/prompts/optional-advanced-optimization.prompt.md",
+    description: "Optional: Advanced optimization - deep dive into performance optimization, auth state reuse, parallel configuration tuning, and advanced patterns",
   },
 };
 
@@ -72,6 +74,10 @@ const REFERENCES = {
   "fixture-patterns": {
     path: ".github/prompts/reference/fixture-patterns.md",
     description: "Get Playwright fixture patterns for parallel execution, state management, and test isolation",
+  },
+  "data-storage-patterns": {
+    path: ".github/prompts/reference/data-storage-patterns.md",
+    description: "Get data storage patterns for test infrastructure (ORM, JSON files, in-memory, MSW)",
   },
 };
 

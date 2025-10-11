@@ -82,13 +82,14 @@ Use these tools in sequence to build a complete test suite:
 2. **generate-test-plan** - Create detailed test plan with scenarios and acceptance criteria
 3. **setup-infrastructure** - Setup Playwright config, fixtures, and folder structure
 4. **generate-page-objects** - Generate type-safe page object models with optimal selectors
-5. **implement-test-suite** - Implement complete test suite with best practices
-6. **review-and-optimize** - Review and optimize for quality and performance
+5. **implement-test-suite** - Implement & verify complete test suite with quality checks and performance optimization
 
 ### Optional Enhancements
 
+- **setup-ci-cd** - Add GitHub Actions for automated testing
 - **add-accessibility** - Add axe-core accessibility testing
 - **add-api-testing** - Add API testing capabilities
+- **advanced-optimization** - Deep dive into auth state reuse, performance tuning, and advanced patterns
 
 ### Reference Documentation
 
