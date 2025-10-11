@@ -1,369 +1,300 @@
 # Prompt 3: Setup Infrastructure ⚙️
 
-> Create ALL infrastructure in one shot
+> Create ONLY Playwright configuration files for parallel test execution
 
-**Input:** `project-config.md` (from `.playwright-wizard-mcp/`)
+**Input:** `.playwright-wizard-mcp/project-config.md`
 
-**Output:** ALL infrastructure code
-
-- `playwright.config.ts`
-- `.github/workflows/playwright.yml` (or GitLab CI/CircleCI)
-- `tests/fixtures.ts`
-- `tests/test-data.ts`
-- `tests/utils/db-helpers.ts`
+**Output:** Configuration files ONLY (absolute maximum 4 files)
 
 ---
 
-## Prerequisites
+## 🛑 MANDATORY FILE LIMIT: 4 FILES MAXIMUM
 
-> 💡 **MCP Tool:** Context7 MCP for Playwright config and patterns  
-> See `reference/mcp-setup.md` for detailed usage  
-> See `reference/fixture-patterns.md` for comprehensive fixture examples
+You will create EXACTLY these files and NO others:
 
-**Verify Context7 MCP is available:**
+1. ✅ `playwright.config.ts` - Test runner configuration
+2. ✅ `tests/tsconfig.json` - TypeScript configuration for tests folder
+3. ✅ `tests/fixtures.ts` - ONLY workerId fixture (bare minimum)
+4. ✅ `tests/helpers/test-data.ts` - ONLY basic data generators
 
-```typescript
-await mcp_context7_resolve_library_id({ libraryName: "playwright" });
-```
+**STOP. That's it. 4 files. If you create a 5th file, you have failed.**
 
-**If fails:** Ask user to install Context7 MCP, then retry.
+**Note:** Keep it simple. Page object fixtures and advanced patterns are added in Step 4.
+
+**Note on `tests/helpers/`:**
+- ✅ Generic utilities (test-data.ts for unique data generation) are OK
+- ❌ Page-specific helpers (auth-helpers.ts, cart-helpers.ts, navigation-helpers.ts) are FORBIDDEN
+- **We use Page Object Models (Step 4) for page interactions, NOT helper functions**
 
 ---
 
-## Task 1: Playwright Config
+## What Each File Contains
 
-Create `playwright.config.ts`:
+### 1. `playwright.config.ts`
 
-```typescript
-import { defineConfig, devices } from '@playwright/test';
+Read `.playwright-wizard-mcp/project-config.md` for:
+- baseURL (dev server URL)
+- webServer command and port
 
-export default defineConfig({
-  testDir: './tests/e2e',
-  
-  // Parallel execution
-  fullyParallel: true,
-  
-  // CI safeguards
-  forbidOnly: !!process.env.CI,
-  
-  // Retries
-  retries: process.env.CI ? 2 : 0,
-  
-  // Workers
-  workers: process.env.CI ? 4 : undefined,
-  
-  // Reporter
-  reporter: [
-    ['html'],
-    ['junit', { outputFile: 'test-results/junit.xml' }],
-    ['github'],
-  ],
-  
-  use: {
-    baseURL: 'http://localhost:3000',
-    trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+Create config with:
+- baseURL from project-config
+- webServer config from project-config
+- workers: 4
+- retries: 1
+- reporters: ['html', 'json', 'junit']
+- trace/screenshot on first retry
+- timeout: 30000
+
+**That's ALL. No globalSetup/globalTeardown references.**
+
+### 2. `tests/tsconfig.json`
+
+```json
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": ["@playwright/test", "node"]
   },
-
-  projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-  ],
-
-  webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120000,
-  },
-});
+  "include": ["**/*.ts"]
+}
 ```
 
-**Adapt to detected stack:**
-
-- Vite: `url: 'http://localhost:5173'`
-- Monorepo: `command: 'pnpm --filter web dev'`
-
----
-
-## Task 2: CI/CD Pipeline
-
-Create `.github/workflows/playwright.yml`:
-
-```yaml
-name: Playwright Tests
-
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
-
-jobs:
-  test:
-    timeout-minutes: 60
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: actions/checkout@v4
-      
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Install Playwright
-        run: npx playwright install --with-deps
-      
-      - name: Run tests
-        run: npx playwright test
-      
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
-```
-
-**For monorepos:**
-
-```yaml
-- name: Run tests
-  run: pnpm --filter web test:e2e
-```
-
----
-
-## Task 3: Fixtures
-
-Create `tests/fixtures.ts`:
+### 3. `tests/fixtures.ts`
 
 ```typescript
 import { test as base } from '@playwright/test';
-import { LoginPage } from './pages/LoginPage';
-import { TestDataFactory } from './test-data';
 
-// Worker-scoped fixture (shared across all tests in worker)
 type WorkerFixtures = {
-  workerTestUser: { email: string; password: string };
+  workerId: string;
 };
 
-// Test-scoped fixture (unique per test)
-type TestFixtures = {
-  loginPage: LoginPage;
-  authenticatedPage: Page;
-  uniqueTestData: TestDataFactory;
-};
-
-export const test = base.extend<TestFixtures, WorkerFixtures>({
-  // Worker fixture: one test user per worker
-  workerTestUser: [async ({ }, use, workerInfo) => {
-    const email = `test-worker-${workerInfo.workerIndex}@example.com`;
-    const password = 'TestPass123!';
-    
-    // Create user in DB
-    await createTestUser({ email, password });
-    
-    await use({ email, password });
-    
-    // Cleanup
-    await deleteTestUser(email);
-  }, { scope: 'worker' }],
-
-  // Test fixture: new LoginPage per test
-  loginPage: async ({ page }, use) => {
-    await use(new LoginPage(page));
-  },
-
-  // Test fixture: authenticated session
-  authenticatedPage: async ({ page, workerTestUser }, use) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.goto();
-    await loginPage.login(workerTestUser.email, workerTestUser.password);
-    await use(page);
-  },
-
-  // Test fixture: unique data factory
-  uniqueTestData: async ({ }, use, workerInfo, testInfo) => {
-    const factory = new TestDataFactory(
-      workerInfo.workerIndex,
-      testInfo.testId
-    );
-    await use(factory);
-  },
+export const test = base.extend<{}, WorkerFixtures>({
+  workerId: [
+    async ({}, use, testInfo) => {
+      await use(`w${testInfo.parallelIndex}`);
+    },
+    { scope: 'worker' },
+  ],
 });
 
 export { expect } from '@playwright/test';
 ```
 
----
+**THAT'S ALL. This is the foundation.**
 
-## Task 4: Test Data Factory
+**Step 4** will enhance this with:
+- Page object fixtures
+- Test data fixtures  
+- Auth fixtures (based on test-plan.md requirements)
+- Common data fixtures (based on test-plan.md requirements)
 
-Create `tests/test-data.ts`:
+Start minimal. Step 4 adds what tests actually need.
+
+### 4. `tests/helpers/test-data.ts`
 
 ```typescript
-import { faker } from '@faker-js/faker';
-
 export class TestDataFactory {
-  constructor(
-    private workerIndex: number,
-    private testId: string
-  ) {}
-
-  // Generate unique email
-  uniqueEmail(): string {
-    const timestamp = Date.now();
-    return `test-w${this.workerIndex}-${timestamp}-${faker.string.nanoid(4)}@example.com`;
+  constructor(private workerId: string) {}
+  
+  generateEmail(): string {
+    return `user-${this.workerId}-${Date.now()}@test.com`;
   }
-
-  // Generate unique username
-  uniqueUsername(): string {
-    return `user_w${this.workerIndex}_${faker.string.nanoid(8)}`;
+  
+  generateUsername(): string {
+    return `user-${this.workerId}-${Date.now()}`;
   }
-
-  // Create user object
-  createUser(overrides?: Partial<User>): User {
-    return {
-      id: faker.string.uuid(),
-      email: this.uniqueEmail(),
-      name: faker.person.fullName(),
-      password: 'TestPass123!',
-      ...overrides,
-    };
-  }
-
-  // Create product object
-  createProduct(overrides?: Partial<Product>): Product {
-    return {
-      id: faker.string.uuid(),
-      name: `Product ${faker.commerce.productName()}`,
-      price: parseFloat(faker.commerce.price()),
-      stock: faker.number.int({ min: 0, max: 100 }),
-      ...overrides,
-    };
-  }
-
-  // Create order object
-  createOrder(overrides?: Partial<Order>): Order {
-    return {
-      id: faker.string.uuid(),
-      userId: '',
-      items: [],
-      total: 0,
-      status: 'pending',
-      createdAt: new Date(),
-      ...overrides,
-    };
+  
+  generatePassword(): string {
+    return `Pass${this.workerId}${Date.now()}!`;
   }
 }
 ```
+
+**Simple generators only. More methods can be added in Step 4 if needed.**
 
 ---
 
-## Task 5: DB Helpers
+## FORBIDDEN - Do NOT Create Application-Specific Files
 
-Create `tests/utils/db-helpers.ts`:
+**Infrastructure = Generic configuration that works for ANY Playwright project**
 
-```typescript
-import { PrismaClient } from '@prisma/client';
+You will NOT create files that are specific to the application being tested:
 
-const prisma = new PrismaClient();
+### ❌ No Application-Specific Fixtures
+- No `auth.fixtures.ts`, `login.fixtures.ts`, `user.fixtures.ts`
+- No `cart.fixtures.ts`, `checkout.fixtures.ts`, `product.fixtures.ts`
+- No fixtures that interact with pages or APIs
+- **Rule: If the fixture name relates to a feature of THIS app, don't create it**
 
-export async function createTestUser(data: {
-  email: string;
-  password: string;
-}) {
-  return prisma.user.create({
-    data: {
-      email: data.email,
-      password: await hashPassword(data.password),
-      name: 'Test User',
-    },
-  });
-}
+### ❌ No Helper Files
 
-export async function deleteTestUser(email: string) {
-  return prisma.user.delete({
-    where: { email },
-  });
-}
+**Generic helpers are in the 4 required files. Do NOT create additional helper files.**
 
-export async function seedTestData(workerIndex: number) {
-  // Create worker-specific test data
-  await prisma.product.createMany({
-    data: [
-      { name: `Product A (W${workerIndex})`, price: 10 },
-      { name: `Product B (W${workerIndex})`, price: 20 },
-    ],
-  });
-}
+- No `auth-helpers.ts`, `login-helpers.ts`, `user-helpers.ts`
+- No `cart-helpers.ts`, `checkout-helpers.ts`, `product-helpers.ts`
+- No `assertions.ts`, `navigation.ts`, `api-helpers.ts`
+- No page interaction utilities
+- No custom assertion functions
+- **Rule: Page interactions go in Page Objects (Step 4), not helper functions**
 
-export async function cleanupTestData(workerIndex: number) {
-  // Delete worker-specific data
-  await prisma.product.deleteMany({
-    where: {
-      name: { contains: `(W${workerIndex})` },
-    },
-  });
-}
-```
+### ❌ No Test Files
+- No `*.spec.ts` files
+- No example tests or test templates
+- **Rule: Tests are not infrastructure**
 
-**Adapt to detected ORM:**
+### ❌ No Documentation
+- No `README.md`, `SETUP.md`, `GUIDE.md`
+- No markdown files explaining how to use the setup
+- **Rule: Code should be self-documenting**
 
-- Drizzle: Use `db.insert()`, `db.delete()`
-- Mongoose: Use `Model.create()`, `Model.deleteOne()`
-- TypeORM: Use `repository.save()`, `repository.remove()`
+### ❌ No CI/CD or Extra Tooling
+- No `.github/workflows/` files
+- No Docker files
+- No additional scripts
+- **Rule: User's project may already have these**
+
+**Bottom line: If it's not one of the 4 required files, don't create it.**
 
 ---
 
-## Task 6: Package.json Scripts
+## Implementation Steps
 
-Add to `package.json`:
-
-```json
-{
-  "scripts": {
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "test:e2e:headed": "playwright test --headed",
-    "test:e2e:debug": "playwright test --debug",
-    "test:report": "playwright show-report"
-  }
-}
-```
+1. Read `.playwright-wizard-mcp/project-config.md`
+2. Create `playwright.config.ts` with correct baseURL and webServer
+3. Create `tests/tsconfig.json` (copy exact content above)
+4. Create `tests/fixtures.ts` (copy exact content above)
+5. Create `tests/helpers/test-data.ts` (copy exact content above)
+6. Verify with `npx tsc --noEmit`
+7. **Count files created: Must be exactly 4**
 
 ---
 
 ## Verification
 
-Run these commands:
+Before responding, count your files:
+1. playwright.config.ts
+2. tests/tsconfig.json
+3. tests/fixtures.ts
+4. tests/helpers/test-data.ts
+
+**Is that exactly 4 files? If NO, delete files until it is.**
+
+### Step 1: Generate Code Compatible with Project
+
+Read `package.json` to check the module system:
+- If `"type": "module"` exists → Use ESM syntax (direct paths, no `require`)
+- If no `"type"` or `"type": "commonjs"` → CommonJS syntax is fine
+
+**Generate `playwright.config.ts` that matches the project's module system.**
+
+### Step 2: TypeScript Compilation Check
+
+Run:
+```bash
+npx tsc --noEmit  # Must pass with 0 errors
+```
+
+If errors, fix them before proceeding.
+
+### Step 3: Create Demo Test (Temporary Verification Only)
+
+Create `tests/demo-verify.spec.ts`:
+
+```typescript
+import { test, expect } from './fixtures';
+
+test.describe('Infrastructure Verification', () => {
+  test('should have workerId fixture', async ({ workerId }) => {
+    console.log('Running with workerId:', workerId);
+    expect(workerId).toMatch(/^w\d+$/);
+  });
+
+  test('should load page', async ({ page }) => {
+    await page.goto('/');
+    // Just verify page loads, don't care about content
+    expect(page.url()).toContain('://');
+  });
+});
+```
+
+**Simple tests just to verify fixtures and Playwright work.**
+
+### Step 4: Run Demo Test to Verify Infrastructure
+
+**🛑 MANDATORY - DO NOT SKIP THIS STEP**
+
+Run the demo test to verify everything works:
 
 ```bash
-# Install Playwright
-npm install -D @playwright/test @faker-js/faker
-npx playwright install
-
-# Verify config
-npx playwright test --list
-
-# Test can run
-npx playwright test --project=chromium
+npx playwright test tests/demo-verify.spec.ts --workers=2 --project=chromium --timeout=60000
 ```
+
+**Expected outcomes:**
+- ✅ Playwright loads the config successfully (no syntax errors)
+- ✅ Tests compile and run (TypeScript is configured correctly)
+- ✅ Fixture provides workerId (fixture system works)
+- ✅ Page can navigate (webServer config is correct)
+
+**If the test run FAILS:**
+1. Read the error message carefully
+2. Common issues:
+   - **"require is not defined"** → Fix: Change `require.resolve()` to direct paths
+   - **"Cannot find module"** → Fix: Check import paths and TypeScript config
+   - **"Port already in use"** → Fix: Check webServer port or use `reuseExistingServer: true`
+   - **TypeScript errors** → Fix: Check tsconfig paths and types
+3. Fix the issue in the generated files
+4. Run the test again
+5. Repeat until tests pass
+
+**DO NOT mark setup as complete if tests don't run.**
+
+### Step 5: Clean Up Demo Test
+
+After verification passes, DELETE the demo test:
+
+```bash
+rm tests/demo-verify.spec.ts
+```
+
+We only needed it to verify the infrastructure works.
+
+### Step 6: Final File Count
+
+Count files again:
+1. playwright.config.ts
+2. tests/tsconfig.json
+3. tests/fixtures.ts
+4. tests/helpers/test-data.ts
+
+**Total: 4 files (demo-verify.spec.ts should be deleted)**
 
 ---
 
-## Output Checklist
+## Response Format
 
-- [ ] `playwright.config.ts` created with parallel settings
-- [ ] CI/CD pipeline created (GitHub Actions or equivalent)
-- [ ] `fixtures.ts` created with worker + test fixtures
-- [ ] `test-data.ts` created with Faker integration
-- [ ] `db-helpers.ts` created for database operations
-- [ ] Package scripts added
-- [ ] Playwright installed (`npx playwright install`)
-- [ ] Config validated (`npx playwright test --list`)
+Only respond with success after ALL verification steps pass:
+
+```
+✅ Infrastructure Setup Complete
+
+Files Created:
+1. playwright.config.ts (ESM-compatible)
+2. tests/tsconfig.json
+3. tests/fixtures.ts
+4. tests/helpers/test-data.ts
+
+Total: 4 files
+
+Verification:
+✅ TypeScript compilation: 0 errors
+✅ Demo test execution: Passed
+✅ Fixture system: Working
+✅ WebServer config: Working
+✅ Module system: Compatible
+
+Next Step: User will create Page Objects (Step 4).
+```
+
+**If verification fails, report the error and the fix applied.**
+
+That's it. Done. Do not create anything else.
