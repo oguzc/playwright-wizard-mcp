@@ -1,0 +1,57 @@
+name: Validate chat-modes
+
+on:
+  push:
+    paths:
+      - '.github/chat-modes/**'
+      - 'tools/chat-orchestrator/**'
+  pull_request:
+    paths:
+      - '.github/chat-modes/**'
+      - 'tools/chat-orchestrator/**'
+
+jobs:
+  validate:
+    name: Validate chat-mode JSON
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies (tools/chat-orchestrator)
+        working-directory: tools/chat-orchestrator
+        run: |
+          npm install --no-audit --no-fund
+
+      - name: Run chat-mode JSON validator
+        working-directory: tools/chat-orchestrator
+        run: |
+          node ./src/validate-mode.js
+
+  tests:
+    name: Run chat-orchestrator unit tests
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies (tools/chat-orchestrator)
+        working-directory: tools/chat-orchestrator
+        run: |
+          npm install --no-audit --no-fund
+
+      - name: Run unit tests
+        working-directory: tools/chat-orchestrator
+        run: |
+          npm test

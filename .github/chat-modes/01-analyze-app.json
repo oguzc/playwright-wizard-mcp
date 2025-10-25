@@ -1,0 +1,169 @@
+{
+  "meta": {
+    "id": "analyze-app",
+    "version": "1.0.0",
+    "title": "Analyze App",
+    "description": "Analyze the running application using Playwright MCP. Produce project_config, pages analysis, selector strategy, verification evidence and files to create.",
+    "requires_mcp": true,
+    "required_tools": ["playwright-mcp"],
+    "required_mcp_servers": ["mcp_playwright_browser"]
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a concise senior developer and test automation analyst. CRITICAL: This mode REQUIRES live browser testing with Playwright MCP. All analysis must be based on actual rendered DOM snapshots and real MCP interactions. Do NOT infer DOM structure from code. If the application is not accessible, ask the user to start it and do not proceed. Return only JSON that matches 'output_schema' exactly. If you cannot produce the schema, return a single JSON object {\"error\": \"cannot_satisfy_schema\", \"reason\": \"...\"}."
+    },
+    {
+      "role": "assistant",
+      "content": "Example: refer to 'output_schema' for the exact JSON structure. Produce only JSON that matches the schema; small example omitted to avoid embedding a large JSON sample here."
+    },
+    {
+      "role": "user",
+      "content": "Analyze the running app at {{runtime.app_url}}. Ports tried: {{runtime.ports}}. Project root: {{runtime.project_root}}. Constraints: {{runtime.constraints}}. Produce JSON matching output_schema. Use Playwright MCP calls to visit pages, take snapshots, verify selectors, and test interactive flows. Create markdown files under `.playwright-wizard-mcp/` and list them in `files_created`. If the app is unreachable, return {\"error\": \"app_unreachable\", \"attempted_urls\": {{runtime.ports}} } or ask for help."
+    }
+  ],
+  "output_schema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "required": ["summary","project_config","pages","selector_strategy","verification","files_created"],
+    "properties": {
+      "summary": { "type": "string", "description": "One-line summary of app and testing focus" },
+      "project_config": {
+        "type": "object",
+        "properties": {
+          "framework": { "type": "string" },
+          "meta_framework": { "type": "string" },
+          "state": { "type": "string" },
+          "api": { "type": "string" },
+          "auth": { "type": "string" },
+          "database": { "type": "string" },
+          "build": { "type": "string" },
+          "monorepo": { "type": "string" },
+          "styling": { "type": "string" },
+          "testing_implications": { "type": "string" }
+        },
+        "additionalProperties": true
+      },
+      "pages": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["title","path","url","score","selectors_verified"],
+          "properties": {
+            "title": { "type": "string" },
+            "path": { "type": "string" },
+            "url": { "type": "string" },
+            "score": { "type": "number", "minimum": 0, "maximum": 100 },
+            "selectors_verified": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["selector","status"],
+                "properties": {
+                  "selector": { "type": "string" },
+                  "status": { "type": "string", "enum": ["VERIFIED","NOT_FOUND","FAILED"] },
+                  "notes": { "type": "string" }
+                }
+              }
+            },
+            "interactive_tests": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "result": { "type": "string", "enum": ["PASS","FAIL","INCONCLUSIVE"] },
+                  "notes": { "type": "string" }
+                }
+              }
+            },
+            "notes": { "type": "string" }
+          }
+        }
+      },
+      "selector_strategy": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "page": { "type": "string" },
+            "recommendation": { "type": "string" },
+            "actions": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "verification": {
+        "type": "object",
+        "properties": {
+          "analysis_date": { "type": "string", "format": "date" },
+          "app_url": { "type": "string" },
+          "browser": { "type": "string" },
+          "pages_visited": { "type": "integer" },
+          "evidence_files": { "type": "array", "items": { "type": "string" } },
+          "confidence": { "type": "string" }
+        },
+        "additionalProperties": true
+      },
+      "files_created": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "files": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["path","content"],
+          "properties": {
+            "path": { "type": "string" },
+            "content": { "type": "string" },
+            "encoding": { "type": "string", "enum": ["utf8","base64"] },
+            "mode": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "added_test_ids": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "file": { "type": "string" },
+            "selector": { "type": "string" },
+            "status": { "type": "string" }
+          }
+        }
+      },
+      "notes": { "type": "string" }
+    },
+    "additionalProperties": false
+  },
+  "examples": [
+    {
+      "input": "Sample local app at http://localhost:3000",
+      "output": {
+        "summary": "Small React app with basic auth flows; needs selective test ids on forms.",
+        "project_config": { "framework": "React", "build": "Vite", "styling": "Tailwind" },
+        "pages": [
+          {
+            "title": "Home",
+            "path": "/",
+            "url": "http://localhost:3000/",
+            "score": 88,
+            "selectors_verified": [
+              { "selector": "getByRole('heading', {name: 'Welcome'})", "status": "VERIFIED" }
+            ],
+            "interactive_tests": [ { "name": "open modal", "result": "PASS" } ]
+          }
+        ],
+        "selector_strategy": [ { "page": "/login", "recommendation": "Add test ids for email/password inputs", "actions": ["Add data-testid to inputs"] } ],
+        "verification": { "analysis_date": "2025-10-25", "app_url": "http://localhost:3000", "browser": "Chromium (Playwright MCP)", "pages_visited": 6, "evidence_files": [".playwright-wizard-mcp/VERIFICATION.md"] },
+        "files_created": [".playwright-wizard-mcp/VERIFICATION.md",".playwright-wizard-mcp/pages.md",".playwright-wizard-mcp/project-config.md"],
+        "added_test_ids": [ { "file": "src/pages/login.tsx", "selector": "data-testid=login-email", "status": "ADDED" } ],
+        "notes": "Re-verify after code changes"
+      }
+    }
+  ]
+}

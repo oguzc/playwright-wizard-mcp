@@ -1,0 +1,21 @@
+{
+  "name": "playwright-wizard-chat-orchestrator",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate-mode": "node ./src/validate-mode.js",
+    "precheck-mode": "node ./src/precheck-mcp.js",
+    "orchestrate": "node ./src/orchestrator.js",
+    "test": "node ./src/tests/run-tests.js"
+  },
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1",
+    "fs-extra": "^11.1.1",
+    "mustache": "^4.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.18.0"
+  }
+}

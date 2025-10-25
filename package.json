@@ -12,7 +12,7 @@
     ".github/prompts"
   ],
   "scripts": {
-    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+  "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\" && node ./scripts/copy-chat-modes.js && node ./scripts/generate-chat-modes-index.js",
     "prepare": "npm run build",
     "watch": "tsc --watch",
     "dev": "tsx src/index.ts"
