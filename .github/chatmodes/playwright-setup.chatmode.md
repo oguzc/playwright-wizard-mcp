@@ -1,6 +1,6 @@
 ---
 description: Configure Playwright project, fixtures, and CI/CD for parallel, reliable runs.
-tools: ['editFile', 'terminal']
+tools: ['edit', 'search', 'runCommands', 'playwright/*', 'context7/*', 'usages', 'problems', 'testFailure', 'todos']
 ---
 
 # Playwright Setup Mode

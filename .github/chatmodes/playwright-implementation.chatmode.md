@@ -1,6 +1,6 @@
 ---
 description: Generate robust Page Objects and implement test suites using best selector practices.
-tools: ['editFile', 'search', 'terminal']
+tools: ['edit', 'search', 'runCommands', 'playwright/*', 'context7/*', 'usages', 'problems', 'testFailure', 'todos']
 ---
 
 # Playwright Implementation Mode

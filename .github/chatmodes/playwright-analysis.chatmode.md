@@ -1,6 +1,6 @@
 ---
 description: Analyze your app and generate a Playwright testing strategy with artifacts.
-tools: ['search', 'fetch', 'githubRepo']
+tools: ['edit', 'search', 'playwright/*', 'context7/*', 'usages', 'todos']
 ---
 
 # Playwright Analysis Mode
