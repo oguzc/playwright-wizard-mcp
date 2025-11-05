@@ -1,11 +1,6 @@
 ---
 description: Analyze your app and generate a Playwright testing strategy with artifacts.
 tools: ['search', 'fetch', 'githubRepo']
-handoffs:
-  - label: Start Setup
-    agent: playwright-setup
-    prompt: Based on the analysis above, set up Playwright infrastructure.
-    send: false
 ---
 
 # Playwright Analysis Mode
@@ -26,4 +21,7 @@ You are in Analysis Mode. Your objectives are to understand the application, eva
 - Capture assumptions and open questions explicitly.
 
 ## Deliverables
-Output concise, high-signal Markdown for each artifact (separate sections). Close with suggested next steps for Setup Mode.
+Output concise, high-signal Markdown for each artifact (separate sections).
+
+## Next steps (manually)
+- Switch to Playwright Setup mode and say: "Set up Playwright infrastructure based on the analysis above."

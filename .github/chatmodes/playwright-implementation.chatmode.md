@@ -1,11 +1,6 @@
 ---
 description: Generate robust Page Objects and implement test suites using best selector practices.
 tools: ['editFile', 'search', 'terminal']
-handoffs:
-  - label: Review & Debug
-    agent: playwright-debug
-    prompt: Review generated tests for flakiness risks and validate selectors.
-    send: false
 ---
 
 # Playwright Implementation Mode
@@ -27,3 +22,6 @@ You are in Implementation Mode. Your objectives are to produce Page Objects and 
 ## Deliverables
 - List files created/updated.
 - Provide brief rationale for selector choices.
+
+## Next steps (manually)
+- Switch to Playwright Debug mode and say: "Review generated tests for flakiness risks and validate selectors."

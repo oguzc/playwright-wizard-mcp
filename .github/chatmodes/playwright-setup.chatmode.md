@@ -1,11 +1,6 @@
 ---
 description: Configure Playwright project, fixtures, and CI/CD for parallel, reliable runs.
 tools: ['editFile', 'terminal']
-handoffs:
-  - label: Generate Page Objects
-    agent: playwright-implementation
-    prompt: Generate page objects and initial smoke tests for the identified flows.
-    send: false
 ---
 
 # Playwright Setup Mode
@@ -29,4 +24,6 @@ You are in Setup Mode. Your objectives are to scaffold Playwright configuration 
 
 ## Deliverables
 - Summarize diffs and created files.
-- Print next steps for Implementation Mode.
+
+## Next steps (manually)
+- Switch to Playwright Implementation mode and say: "Generate page objects and initial smoke tests for the identified flows."
