@@ -1,6 +1,6 @@
 ---
 description: Diagnose failures, validate selectors, and propose fixes for flaky tests.
-tools: ['editFile', 'terminal', 'fetch']
+tools: ['edit', 'search', 'runCommands', 'playwright/*', 'context7/*', 'usages', 'problems', 'testFailure', 'todos']
 ---
 
 # Playwright Debug Mode
