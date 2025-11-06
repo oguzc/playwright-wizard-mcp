@@ -4,7 +4,7 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { mkdir, readFile, writeFile } from "fs/promises";
-import { dirname, join, resolve as pathResolve } from "path";
+import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -22,38 +22,15 @@ const server = new Server(
   }
 );
 
-// Resolve absolute path to a bundled file inside this package (no version bump)
-async function resolveBundledPath(relFromRoot: string) {
-  const candidates: string[] = [];
-
+// Match main-branch approach: try repo root relative to build, then CWD
+async function readFromRepoOrCwd(relativePath: string) {
   try {
-    // When installed as dependency
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const pkgPath = require.resolve("playwright-wizard-mcp/package.json", { paths: [process.cwd()] });
-    const pkgRoot = pathResolve(pkgPath, "..");
-    candidates.push(pathResolve(pkgRoot, relFromRoot));
-  } catch {}
-
-  // When running from source (ts-node/esm)
-  candidates.push(pathResolve(__dirname, "..", relFromRoot));
-
-  // When compiled into dist nearby
-  candidates.push(pathResolve(__dirname, relFromRoot));
-
-  for (const p of candidates) {
-    try {
-      await readFile(p, "utf-8");
-      return p;
-    } catch {}
+    const rootPath = join(__dirname, "..", relativePath);
+    return await readFile(rootPath, "utf-8");
+  } catch (error) {
+    const projectPath = join(process.cwd(), relativePath);
+    return await readFile(projectPath, "utf-8");
   }
-
-  throw new Error(`Could not resolve bundled file: ${relFromRoot}. Tried: ${candidates.join(" | ")}`);
-}
-
-async function readBundledChatMode(relPath: string) {
-  const abs = await resolveBundledPath(relPath);
-  const content = await readFile(abs, "utf-8");
-  return { content, sourcePath: abs };
 }
 
 server.setRequestHandler(ListToolsRequestSchema, async () => {
@@ -86,10 +63,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 
   if (name === "install-chatmodes") {
-    const targetDir = join(process.cwd(), ".github", "chatmodes");
-    await mkdir(targetDir, { recursive: true });
-
-    const files = [
+    const targets = [
       ".github/chatmodes/playwright-analysis.chatmode.md",
       ".github/chatmodes/playwright-setup.chatmode.md",
       ".github/chatmodes/playwright-implementation.chatmode.md",
@@ -100,14 +74,20 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const errors: string[] = [];
     const sources: string[] = [];
 
-    for (const rel of files) {
+    for (const rel of targets) {
       try {
-        const { content, sourcePath } = await readBundledChatMode(rel);
-        const dest = join(process.cwd(), rel);
-        await mkdir(dirname(dest), { recursive: true });
-        await writeFile(dest, content, "utf-8");
+        const content = await readFromRepoOrCwd(rel);
+        const destPath = join(process.cwd(), rel);
+        await mkdir(dirname(destPath), { recursive: true });
+        await writeFile(destPath, content, "utf-8");
         written.push(rel);
-        sources.push(`${rel} <- ${sourcePath}`);
+        // Source is either __dirname/.. or CWD; we can't know which path succeeded without duplicating logic,
+        // so try resolving root first and fall back to CWD for logging only.
+        try {
+          sources.push(`${rel} <- ${join(__dirname, "..", rel)}`);
+        } catch {
+          sources.push(`${rel} <- ${join(process.cwd(), rel)}`);
+        }
       } catch (e) {
         errors.push(`${rel}: ${e instanceof Error ? e.message : String(e)}`);
       }
@@ -116,12 +96,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     let msg = "";
     if (written.length) {
       msg += `Installed ${written.length} chat modes to:\n- ${written.join("\n- ")}`;
-      msg += `\n\nSource locations:\n- ${sources.join("\n- ")}`;
+      msg += `\n\nSource candidates used:\n- ${sources.join("\n- ")}`;
     } else {
       msg += "No chat modes were installed.";
     }
     if (errors.length) {
       msg += `\n\nErrors:\n- ${errors.join("\n- ")}`;
+      msg += "\n\nEnsure the chat mode files exist at the repo root relative to build (..\\.github\\chatmodes) or in the current workspace.";
     }
 
     return { content: [{ type: "text", text: msg }] };
