@@ -13,7 +13,7 @@ const __dirname = dirname(__filename);
 const server = new Server(
   {
     name: "playwright-wizard-mcp",
-    version: "0.2.1",
+    version: "0.2.1", // keep as-is while developing
   },
   {
     capabilities: {
@@ -22,28 +22,38 @@ const server = new Server(
   }
 );
 
-/**
- * Resolve the absolute path to a bundled file inside this package, regardless of CWD.
- * Strategy:
- * 1) Try to locate the package root via require.resolve of package.json (works when installed).
- * 2) Fallback to __dirname/.. for dev (running from source).
- */
+// Resolve absolute path to a bundled file inside this package (no version bump)
 async function resolveBundledPath(relFromRoot: string) {
+  const candidates: string[] = [];
+
   try {
-    // When installed as a dependency
+    // When installed as dependency
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const pkgPath = require.resolve("playwright-wizard-mcp/package.json", { paths: [process.cwd()] });
     const pkgRoot = pathResolve(pkgPath, "..");
-    return pathResolve(pkgRoot, relFromRoot);
-  } catch {
-    // Fallback when running from source (ts-node/esm)
-    return pathResolve(__dirname, "..", relFromRoot);
+    candidates.push(pathResolve(pkgRoot, relFromRoot));
+  } catch {}
+
+  // When running from source (ts-node/esm)
+  candidates.push(pathResolve(__dirname, "..", relFromRoot));
+
+  // When compiled into dist nearby
+  candidates.push(pathResolve(__dirname, relFromRoot));
+
+  for (const p of candidates) {
+    try {
+      await readFile(p, "utf-8");
+      return p;
+    } catch {}
   }
+
+  throw new Error(`Could not resolve bundled file: ${relFromRoot}. Tried: ${candidates.join(" | ")}`);
 }
 
 async function readBundledChatMode(relPath: string) {
   const abs = await resolveBundledPath(relPath);
-  return await readFile(abs, "utf-8");
+  const content = await readFile(abs, "utf-8");
+  return { content, sourcePath: abs };
 }
 
 server.setRequestHandler(ListToolsRequestSchema, async () => {
@@ -86,16 +96,18 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       ".github/chatmodes/playwright-debug.chatmode.md",
     ];
 
-    const written = [];
-    const errors = [];
+    const written: string[] = [];
+    const errors: string[] = [];
+    const sources: string[] = [];
 
     for (const rel of files) {
       try {
-        const content = await readBundledChatMode(rel);
+        const { content, sourcePath } = await readBundledChatMode(rel);
         const dest = join(process.cwd(), rel);
         await mkdir(dirname(dest), { recursive: true });
         await writeFile(dest, content, "utf-8");
         written.push(rel);
+        sources.push(`${rel} <- ${sourcePath}`);
       } catch (e) {
         errors.push(`${rel}: ${e instanceof Error ? e.message : String(e)}`);
       }
@@ -103,13 +115,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     let msg = "";
     if (written.length) {
-      msg += `Installed chat modes to:\n- ${written.join("\n- ")}`;
+      msg += `Installed ${written.length} chat modes to:\n- ${written.join("\n- ")}`;
+      msg += `\n\nSource locations:\n- ${sources.join("\n- ")}`;
     } else {
       msg += "No chat modes were installed.";
     }
     if (errors.length) {
       msg += `\n\nErrors:\n- ${errors.join("\n- ")}`;
-      msg += "\n\nIf running from a linked package, ensure the chat mode files are included in the published package.";
     }
 
     return { content: [{ type: "text", text: msg }] };
