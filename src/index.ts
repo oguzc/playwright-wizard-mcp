@@ -22,7 +22,7 @@ const server = new Server(
   }
 );
 
-async function readBundledChatMode(relPath) {
+async function readBundledChatMode(relPath: string) {
   // Try relative to project root when running from TS
   const candidateA = join(process.cwd(), relPath);
   try { return await readFile(candidateA, "utf-8"); } catch {}
