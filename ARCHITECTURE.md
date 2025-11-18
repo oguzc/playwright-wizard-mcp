@@ -24,8 +24,10 @@ src/
 ### 1. Tool Models as Code
 Each tool is defined as a TypeScript object containing:
 - **name**: Tool identifier
+- **title**: Human-readable name with emoji 🎨
 - **description**: What the tool does
 - **inputSchema**: JSON schema for inputs
+- **annotations**: Behavior hints for AI clients
 - **content**: Instructions embedded in code
 
 ### 2. No File Dependencies
@@ -44,18 +46,43 @@ Each tool is defined as a TypeScript object containing:
 - Server logic in `index.ts`
 - Types in `models/types.ts`
 
+### 5. Rich Tool Metadata
+All tools include annotations to help AI clients understand tool behavior:
+- **readOnlyHint**: Tool only reads data, doesn't modify
+- **destructiveHint**: Tool deletes or overwrites data
+- **idempotentHint**: Same result if run multiple times
+- **openWorldHint**: Depends on external state (network, time, etc.)
+
 ## Available Tools
 
 ### Workflow Tools
-1. **analyze-app**: Analyze application and create test strategy
-2. **generate-test-plan**: Create comprehensive test plan
-3. **setup-infrastructure**: Set up test infrastructure
-4. **generate-page-objects**: Create page object models
-5. **implement-test-suite**: Implement complete test suite
+1. **🔍 analyze-app**: Analyze application and create test strategy (read-only, idempotent)
+2. **📋 generate-test-plan**: Create comprehensive test plan (creates files)
+3. **🛠️ setup-infrastructure**: Set up test infrastructure (creates files)
+4. **📄 generate-page-objects**: Create page object models (creates files)
+5. **✅ implement-test-suite**: Implement complete test suite (creates files)
 
 ### Reference Tools
-1. **reference-core-principles**: Core testing principles
-2. **reference-selector-strategies**: Selector best practices
+1. **📖 reference-core-principles**: Core testing principles (read-only, idempotent)
+2. **🎯 reference-selector-strategies**: Selector best practices (read-only, idempotent)
+
+## Tool Annotations
+
+### Read-Only Tools (Safe to run anytime)
+- `analyze-app` ✅
+- `reference-core-principles` ✅
+- `reference-selector-strategies` ✅
+
+### File-Creating Tools (Modify filesystem)
+- `generate-test-plan` 📝
+- `setup-infrastructure` 📝
+- `generate-page-objects` 📝
+- `implement-test-suite` 📝
+
+### Idempotent Tools (Same result every time)
+- `analyze-app` ✅
+- `reference-core-principles` ✅
+- `reference-selector-strategies` ✅
 
 ## Benefits Over Previous Architecture
 
@@ -67,6 +94,8 @@ Each tool is defined as a TypeScript object containing:
 | Startup Speed | Slower (file reads) | Faster (no I/O) |
 | Maintainability | Lower | Higher |
 | Testing | Harder | Easier |
+| Tool Metadata | None | Rich (titles, annotations) |
+| AI-Friendly | Basic | Enhanced |
 
 ## Adding New Tools
 
@@ -74,11 +103,19 @@ Each tool is defined as a TypeScript object containing:
 ```typescript
 export const myNewTool: MCPTool = {
   name: "my-new-tool",
+  title: "🎨 My New Tool",
   description: "What it does",
   inputSchema: {
     type: "object" as const,
     properties: {},
     required: [],
+  },
+  annotations: {
+    title: "My New Tool",
+    readOnlyHint: true,      // true if only reads data
+    destructiveHint: false,  // true if deletes/overwrites
+    idempotentHint: true,    // true if same result every time
+    openWorldHint: false,    // true if depends on external state
   },
   content: `Your instructions here`,
 };
