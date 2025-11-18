@@ -2,11 +2,19 @@ import { MCPTool } from "../types.js";
 
 export const generateTestPlanTool: MCPTool = {
   name: "generate-test-plan",
+  title: "📋 Generate Test Plan",
   description: "Step 2: Generate test plan - create detailed test scenarios with user flows, edge cases, acceptance criteria, and test data based on the analysis",
   inputSchema: {
     type: "object" as const,
     properties: {},
     required: [],
+  },
+  annotations: {
+    title: "Generate Test Plan",
+    readOnlyHint: false,
+    destructiveHint: false,
+    idempotentHint: false,
+    openWorldHint: false,
   },
   content: `# Step 2: Generate Test Plan
 
