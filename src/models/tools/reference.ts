@@ -2,11 +2,19 @@ import { MCPTool } from "../types.js";
 
 export const corePrinciplesTool: MCPTool = {
   name: "reference-core-principles",
+  title: "📖 Core Testing Principles",
   description: "Get core testing principles and quality standards that guide all Playwright test implementations",
   inputSchema: {
     type: "object" as const,
     properties: {},
     required: [],
+  },
+  annotations: {
+    title: "Core Testing Principles",
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+    openWorldHint: false,
   },
   content: `# Core Testing Principles
 
@@ -29,11 +37,19 @@ export const corePrinciplesTool: MCPTool = {
 
 export const selectorStrategiesTool: MCPTool = {
   name: "reference-selector-strategies",
+  title: "🎯 Selector Strategies",
   description: "Get selector strategies, HTML quality scoring guidelines, and best practices for robust element selection",
   inputSchema: {
     type: "object" as const,
     properties: {},
     required: [],
+  },
+  annotations: {
+    title: "Selector Strategies",
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+    openWorldHint: false,
   },
   content: `# Selector Strategies
 
