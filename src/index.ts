@@ -11,7 +11,7 @@ import { allTools } from "./models/tools/index.js";
 const server = new Server(
   {
     name: "playwright-wizard-mcp",
-    version: "0.2.0",
+    version: "0.1.6",
   },
   {
     capabilities: {
@@ -55,7 +55,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("Playwright Wizard MCP Server v0.2.0 running on stdio");
+  console.error("Playwright Wizard MCP Server v0.1.6 running on stdio");
 }
 
 main().catch((error) => {
