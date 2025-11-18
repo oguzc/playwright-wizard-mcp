@@ -2,11 +2,19 @@ import { MCPTool } from "../types.js";
 
 export const setupInfrastructureTool: MCPTool = {
   name: "setup-infrastructure",
+  title: "🛠️ Setup Infrastructure",
   description: "Step 3: Setup infrastructure - create Playwright config, fixtures for parallel execution, test helpers, and proper folder structure",
   inputSchema: {
     type: "object" as const,
     properties: {},
     required: [],
+  },
+  annotations: {
+    title: "Setup Test Infrastructure",
+    readOnlyHint: false,
+    destructiveHint: false,
+    idempotentHint: false,
+    openWorldHint: false,
   },
   content: `# Step 3: Setup Test Infrastructure
 
@@ -26,11 +34,19 @@ Complete test infrastructure ready for test development.
 
 export const generatePageObjectsTool: MCPTool = {
   name: "generate-page-objects",
+  title: "📋 Generate Page Objects",
   description: "Step 4: Generate page objects - create type-safe page object models with optimal selectors (getByRole/Label preferred, test IDs when needed)",
   inputSchema: {
     type: "object" as const,
     properties: {},
     required: [],
+  },
+  annotations: {
+    title: "Generate Page Objects",
+    readOnlyHint: false,
+    destructiveHint: false,
+    idempotentHint: false,
+    openWorldHint: false,
   },
   content: `# Step 4: Generate Page Objects
 
@@ -50,11 +66,19 @@ Complete page object models in the pages/ directory.
 
 export const implementTestSuiteTool: MCPTool = {
   name: "implement-test-suite",
+  title: "✅ Implement Test Suite",
   description: "Step 5: Implement & verify tests - write complete test suite using page objects, with proper assertions, error handling, parallel execution verification, and performance optimization",
   inputSchema: {
     type: "object" as const,
     properties: {},
     required: [],
+  },
+  annotations: {
+    title: "Implement Test Suite",
+    readOnlyHint: false,
+    destructiveHint: false,
+    idempotentHint: false,
+    openWorldHint: false,
   },
   content: `# Step 5: Implement Test Suite
 
