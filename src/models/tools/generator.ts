@@ -58,4 +58,39 @@ export const generatePageObjectsTool: MCPTool = {
   content: `---\n**General Instructions:**\n- Be concise and actionable.\n- Use context7 to fetch the latest information about app pages and selectors.\n- Use Playwright MCP to discover, extract, and verify selectors from the live DOM.\n- End with a markdown Next Steps checklist.\n---\n\n# Step 4: Generate Page Objects\n\n## Prerequisites\n- Always fetch latest application/page state from context7 and Playwright MCP.\n\n## Actions:\n1. Use Playwright MCP to enumerate all pages and components visible in the running app, discovering selectors, roles, and ARIA/metadata.\n2. Cross-check with `.playwright-wizard-mcp/pages.md` and context7 context.\n3. Create a class file for each page in `.playwright-wizard-mcp/pages/`, using extracted selectors, ensuring every selector/class reflects both the live DOM and recent project context.\n4. Use Playwright MCP and context7 to validate selectors are live and unique.\n\n## 📤 Output:\nAll page object models must be written to `.playwright-wizard-mcp/pages/`.\n\n## Next Steps:\n- [ ] playwright-wizard:implement-test-suite\n`,
 };
 
-// (Leave implement-test-suite for next sequential update)
+export const implementTestSuiteTool: MCPTool = {
+  name: "playwright-wizard:implement-test-suite",
+  title: "✅ Implement Test Suite",
+  description: "Step 5: Write complete test suite using page objects, Playwright MCP, and the latest context7 data. All output is under .playwright-wizard-mcp/tests/.",
+  inputSchema: {
+    type: "object" as const,
+    properties: {},
+    required: [],
+  },
+  annotations: {
+    title: "Implement Test Suite",
+    readOnlyHint: false,
+    destructiveHint: false,
+    idempotentHint: false,
+    openWorldHint: false,
+  },
+  _meta: {
+    dependencies: {
+      required: [
+        { server: "context7", tools: ["fetch_context"] },
+        { server: "@playwright/mcp", tools: ["playwright_navigate","playwright_evaluate","playwright_run_tests","playwright_get_dom_state"] },
+        { server: "@modelcontextprotocol/server-filesystem", tools: ["read_file", "write_file", "list_directory"] }
+      ],
+      optional: []
+    }
+  },
+  content: `---\n**General Instructions:**\n- Write concise, actionable specs for tests.\n- Always use context7 to review project/domain context and page/test requirements.\n- Use Playwright MCP to load, exercise, and validate tests and page objects against the live app, not just file definitions.\n- End every output with a Next Steps checklist.\n---\n\n# Step 5: Implement Test Suite\n\n## Prerequisites\n- Always begin by fetching the latest test plan, context, and app state from context7 and Playwright MCP.\n\n## Actions:\n1. Use Playwright MCP and context7 to load `.playwright-wizard-mcp/test-plan.md` and confirm all page objects exist and match the DOM.\n2. Create or update page objects and helpers as determined by live UI/DOM.
+3. For each user/test flow from context and plan, script the corresponding test scenario and save it in `.playwright-wizard-mcp/tests/`.
+4. Use Playwright MCP to verify and, if possible, run tests after creation.
+\n## 📤 Output:
+All test specs and reports are to be created under `.playwright-wizard-mcp/tests/` and `.playwright-wizard-mcp/reports/`.
+\n## Next Steps:
+- [ ] playwright-wizard:reference-core-principles
+- [ ] playwright-wizard:reference-selector-strategies
+`,
+};
