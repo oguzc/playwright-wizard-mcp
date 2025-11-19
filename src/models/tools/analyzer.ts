@@ -16,23 +16,66 @@ export const analyzeAppTool: MCPTool = {
     idempotentHint: true,
     openWorldHint: false,
   },
+  _meta: {
+    dependencies: {
+      required: [
+        {
+          server: "@playwright/mcp",
+          tools: [
+            "playwright_navigate",
+            "playwright_screenshot",
+            "playwright_evaluate",
+            "playwright_selector"
+          ]
+        },
+        {
+          server: "@modelcontextprotocol/server-filesystem",
+          tools: ["read_file", "list_directory"]
+        }
+      ],
+      optional: [
+        {
+          server: "@modelcontextprotocol/server-brave-search",
+          tools: ["web_search"]
+        }
+      ]
+    }
+  },
   content: `# Step 1: Analyze the Application
 
 Your task is to thoroughly analyze the application and create foundational test strategy documents.
 
-## Actions to Take:
+## 🔧 Required MCP Tools
+
+Before running this tool, ensure these MCP servers are available:
+
+### 1. Playwright MCP (@playwright/mcp)
+- **playwright_navigate(url)** - Navigate to application pages
+- **playwright_screenshot()** - Capture page screenshots
+- **playwright_evaluate(script)** - Run JavaScript in page context to analyze DOM
+- **playwright_selector(selector)** - Test and validate selectors
+
+### 2. Filesystem MCP (@modelcontextprotocol/server-filesystem)
+- **read_file(path)** - Read package.json and config files
+- **list_directory(path)** - List project structure
+
+### 3. Optional: Brave Search MCP
+- **web_search(query)** - Look up framework documentation if needed
+
+## 📋 Actions to Take:
 
 1. **Detect Technology Stack**
-   - Read package.json to identify frameworks, libraries, and testing tools
+   - Use **read_file** to read package.json
+   - Identify frameworks, libraries, and testing tools
    - Note framework version and dependencies
 
 2. **Browse Application Pages**
-   - Use Playwright MCP to navigate through the application
+   - Use **playwright_navigate** to navigate through the application
    - Document all routes and pages
-   - Take screenshots of key pages
+   - Use **playwright_screenshot** to capture key pages
 
 3. **Evaluate DOM Quality**
-   - Check for semantic HTML usage
+   - Use **playwright_evaluate** to check for semantic HTML usage
    - Identify accessibility attributes (ARIA, roles)
    - Note test IDs and data attributes
    - Score HTML quality (1-10)
@@ -42,7 +85,7 @@ Your task is to thoroughly analyze the application and create foundational test 
    - Create pages.md with page inventory and descriptions
    - Create selector-strategy.md with recommended selector approaches
 
-## Output:
+## 📤 Output:
 Create the three strategy files in the project root.
 `,
 };
