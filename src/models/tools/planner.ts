@@ -3,7 +3,7 @@ import { MCPTool } from "../types.js";
 export const generateTestPlanTool: MCPTool = {
   name: "generate-test-plan",
   title: "📋 Generate Test Plan",
-  description: "Step 2: Generate test plan - create detailed test scenarios with user flows, edge cases, acceptance criteria, and test data based on the analysis",
+  description: "Step 2: Generate test plan - create detailed test scenarios with user flows, edge cases, acceptance criteria, and test data based on the analysis. Output file is always .playwright-wizard-mcp/test-plan.md.",
   inputSchema: {
     type: "object" as const,
     properties: {},
@@ -27,41 +27,5 @@ export const generateTestPlanTool: MCPTool = {
       optional: []
     }
   },
-  content: `# Step 2: Generate Test Plan
-
-Create a comprehensive test plan based on the analysis from Step 1.
-
-## 🔧 Required MCP Tools
-
-### Filesystem MCP (@modelcontextprotocol/server-filesystem)
-- **read_file(path)** - Read analysis files from Step 1 (project-config.md, pages.md, selector-strategy.md)
-- **write_file(path, content)** - Create test-plan.md
-
-## 📋 Actions to Take:
-
-1. **Define User Flows**
-   - Use **read_file** to load pages.md and project-config.md
-   - Map out critical user journeys
-   - Identify happy paths and alternative flows
-   - Document expected outcomes
-
-2. **Identify Edge Cases**
-   - Invalid inputs and error states
-   - Boundary conditions
-   - Concurrent operations
-   - Network failures
-
-3. **Create Test Scenarios**
-   - Write detailed test scenarios for each flow
-   - Include preconditions and postconditions
-   - Define acceptance criteria
-
-4. **Define Test Data**
-   - Create test data fixtures
-   - Define data validation rules
-   - Plan for data cleanup
-
-## 📤 Output:
-Use **write_file** to create test-plan.md with all scenarios, flows, and test data requirements.
-`,
+  content: `# Step 2: Generate Test Plan\n\nCreate a comprehensive test plan based on the analysis from Step 1.\n\n## 🔧 Required MCP Tools\n\n### Filesystem MCP (@modelcontextprotocol/server-filesystem)\n- **read_file(path)** - Read analysis files from Step 1 (.playwright-wizard-mcp/project-config.md, pages.md, selector-strategy.md)\n- **write_file(path, content)** - Create .playwright-wizard-mcp/test-plan.md\n\n## 📋 Actions to Take:\n\n1. **Define User Flows**\n   - Use **read_file** to load .playwright-wizard-mcp/pages.md and .playwright-wizard-mcp/project-config.md\n   - Map out critical user journeys\n   - Identify happy paths and alternative flows\n   - Document expected outcomes\n\n2. **Identify Edge Cases**\n   - Invalid inputs and error states\n   - Boundary conditions\n   - Concurrent operations\n   - Network failures\n\n3. **Create Test Scenarios**\n   - Write detailed test scenarios for each flow\n   - Include preconditions and postconditions\n   - Define acceptance criteria\n\n4. **Define Test Data**\n   - Create test data fixtures\n   - Define data validation rules\n   - Plan for data cleanup\n\n## 📤 Output:\nWrite the complete test plan to `.playwright-wizard-mcp/test-plan.md` in the project root.\n`,
 };
