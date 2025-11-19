@@ -16,13 +16,31 @@ export const generateTestPlanTool: MCPTool = {
     idempotentHint: false,
     openWorldHint: false,
   },
+  _meta: {
+    dependencies: {
+      required: [
+        {
+          server: "@modelcontextprotocol/server-filesystem",
+          tools: ["read_file", "write_file"]
+        }
+      ],
+      optional: []
+    }
+  },
   content: `# Step 2: Generate Test Plan
 
 Create a comprehensive test plan based on the analysis from Step 1.
 
-## Actions to Take:
+## 🔧 Required MCP Tools
+
+### Filesystem MCP (@modelcontextprotocol/server-filesystem)
+- **read_file(path)** - Read analysis files from Step 1 (project-config.md, pages.md, selector-strategy.md)
+- **write_file(path, content)** - Create test-plan.md
+
+## 📋 Actions to Take:
 
 1. **Define User Flows**
+   - Use **read_file** to load pages.md and project-config.md
    - Map out critical user journeys
    - Identify happy paths and alternative flows
    - Document expected outcomes
@@ -43,7 +61,7 @@ Create a comprehensive test plan based on the analysis from Step 1.
    - Define data validation rules
    - Plan for data cleanup
 
-## Output:
-Create test-plan.md with all scenarios, flows, and test data requirements.
+## 📤 Output:
+Use **write_file** to create test-plan.md with all scenarios, flows, and test data requirements.
 `,
 };
