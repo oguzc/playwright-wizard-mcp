@@ -3,7 +3,7 @@ import { MCPTool } from "../types.js";
 export const analyzeAppTool: MCPTool = {
   name: "playwright-wizard:analyze-app",
   title: "🔍 Analyze Application",
-  description: "Step 1: Analyze the application - detect tech stack from package.json, browse pages using Playwright MCP, evaluate DOM quality, and create test strategy files (.playwright-wizard-mcp/project-config.md, pages.md, selector-strategy.md)",
+  description: "Step 1: Comprehensive application analysis, using both local files and live DOM/context via Playwright MCP and context7.",
   inputSchema: {
     type: "object" as const,
     properties: {},
@@ -19,13 +19,17 @@ export const analyzeAppTool: MCPTool = {
   _meta: {
     dependencies: {
       required: [
+        { server: "context7", tools: ["fetch_context"] },
         {
           server: "@playwright/mcp",
           tools: [
             "playwright_navigate",
             "playwright_screenshot",
             "playwright_evaluate",
-            "playwright_selector"
+            "playwright_selector",
+            "playwright_highlight",
+            "playwright_get_dom_state",
+            "playwright_query_all"
           ]
         },
         {
@@ -41,51 +45,51 @@ export const analyzeAppTool: MCPTool = {
       ]
     }
   },
-  content: `# Step 1: Analyze the Application
+  content: `---
+**General Instructions:**
+- Write responses in a clear, concise, and actionable style.
+- Always use context7 to fetch the latest project/workspace context and status at the start, and reference it to enrich every analysis step.
+- Always use Playwright MCP for all DOM/HTML/element/attribute checks and screenshots, not just files.
+- At the end of execution, provide a markdown list of the next recommended workflow tool(s) as next steps.
+---
 
-Your task is to thoroughly analyze the application and create foundational test strategy documents.
+# Step 1: Analyze the Application
+
+## Prerequisites:
+- Fetch the freshest context with context7 (`fetch_context`).
+- For every important fact, check BOTH local files (package.json, etc) AND live DOM state with Playwright MCP.
 
 ## 🔧 Required MCP Tools
 
-Before running this tool, ensure these MCP servers are available:
-
-### 1. Playwright MCP (@playwright/mcp)
-- **playwright_navigate(url)** - Navigate to application pages
-- **playwright_screenshot()** - Capture page screenshots
-- **playwright_evaluate(script)** - Run JavaScript in page context to analyze DOM
-- **playwright_selector(selector)** - Test and validate selectors
-
-### 2. Filesystem MCP (@modelcontextprotocol/server-filesystem)
-- **read_file(path)** - Read package.json and config files
-- **list_directory(path)** - List project structure
-
-### 3. Optional: Brave Search MCP
-- **web_search(query)** - Look up framework documentation if needed
+- context7 `fetch_context`: get recent status, project meta, event history, or context.
+- Playwright MCP: `playwright_navigate`, `playwright_screenshot`, `playwright_evaluate`, `playwright_selector`, `playwright_highlight`, `playwright_get_dom_state`, `playwright_query_all` (for DOM traversal and checks).
+- Filesystem MCP: `read_file`, `list_directory` (only as reference, not as ground truth).
 
 ## 📋 Actions to Take:
 
 1. **Detect Technology Stack**
-   - Use **read_file** to read package.json
-   - Identify frameworks, libraries, and testing tools
-   - Note framework version and dependencies
+   - Use `fetch_context` to capture existing frameworks, last edits, goals, issues.
+   - Use `playwright_navigate`/`playwright_evaluate` to probe DOM; validate presence of frameworks/libraries from the running app (even if missing in package.json).
+   - Only supplement with local file reads.
 
 2. **Browse Application Pages**
-   - Use **playwright_navigate** to navigate through the application
-   - Document all routes and pages
-   - Use **playwright_screenshot** to capture key pages
+   - Use Playwright MCP to autotraverse/navigate all app routes/pages.
+   - Log structure and DOM metadata into context.
+   - Use `playwright_screenshot` for every main page.
 
 3. **Evaluate DOM Quality**
-   - Use **playwright_evaluate** to check for semantic HTML usage
-   - Identify accessibility attributes (ARIA, roles)
-   - Note test IDs and data attributes
-   - Score HTML quality (1-10)
+   - Use Playwright MCP to enumerate ARIA, roles, test-ids, and all key HTML/DOM markers.
+   - Use `fetch_context` and compare with last known state to check for missing/changed markup.
+   - Assign a semantic HTML/quality score (cross-check DOM and metadata).
 
 4. **Create Strategy Files**
-   - Create ".playwright-wizard-mcp/project-config.md" with tech stack and architecture
-   - Create ".playwright-wizard-mcp/pages.md" with page inventory and descriptions
-   - Create ".playwright-wizard-mcp/selector-strategy.md" with recommended selector approaches
+   - Write all outputs to `.playwright-wizard-mcp/`.
+   - Output should reflect DOM-verified reality, not just static code.
 
 ## 📤 Output:
-All files must be created inside the ".playwright-wizard-mcp" folder in the project root.
+All files must be inside `.playwright-wizard-mcp`. Always add a final "Next Steps" markdown task list (e.g.,
+- playwright-wizard:generate-test-plan
+- playwright-wizard:setup-infrastructure
+).
 `,
 };
