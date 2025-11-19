@@ -7,6 +7,7 @@
 [![npm version](https://img.shields.io/npm/v/playwright-wizard-mcp.svg)](https://www.npmjs.com/package/playwright-wizard-mcp)
 [![MCP Registry](https://img.shields.io/badge/MCP%20Registry-Available-blue)](https://registry.modelcontextprotocol.io/v0/servers?search=playwright-wizard-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Verified on MseeP](https://mseep.ai/badge.svg)](https://mseep.ai/app/91e31b32-9ab9-40ab-98af-4f9bc7e90dff)
 
 ## Overview
 
