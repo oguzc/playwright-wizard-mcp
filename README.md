@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/oguzc-playwright-wizard-mcp-badge.png)](https://mseep.ai/app/oguzc-playwright-wizard-mcp)
+
 # Playwright Wizard MCP Server
 
 > 🧙‍♂️ An intelligent Model Context Protocol (MCP) server that guides you through creating professional Playwright test suites with best practices built in.
