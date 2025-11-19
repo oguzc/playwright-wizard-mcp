@@ -1,7 +1,7 @@
 import { MCPTool } from "../types.js";
 
 export const setupInfrastructureTool: MCPTool = {
-  name: "setup-infrastructure",
+  name: "playwright-wizard:setup-infrastructure",
   title: "🛠️ Setup Infrastructure",
   description: "Step 3: Setup infrastructure - create Playwright config, fixtures for parallel execution, test helpers, and proper folder structure. All created files (configs, helpers, fixtures) go to .playwright-wizard-mcp/...",
   inputSchema: {
@@ -27,30 +27,11 @@ export const setupInfrastructureTool: MCPTool = {
       optional: []
     }
   },
-  content: `# Step 3: Setup Test Infrastructure
-
-Set up the foundational test infrastructure.
-
-## 🔧 Required MCP Tools
-
-### Filesystem MCP (@modelcontextprotocol/server-filesystem)
-- **create_directory(path)** - Create .playwright-wizard-mcp if not exists
-- **read_file(path)** - Read .playwright-wizard-mcp/project-config.md
-- **write_file(path, content)** - Create config and helper files in .playwright-wizard-mcp/
-
-## 📋 Actions:
-1. Use **create_directory** to create .playwright-wizard-mcp directory
-2. Use **read_file** to load .playwright-wizard-mcp/project-config.md
-3. Write all config, fixtures, helpers, and output files to .playwright-wizard-mcp/ (e.g., .playwright-wizard-mcp/playwright.config.ts)
-4. Maintain clear structure under .playwright-wizard-mcp/ (e.g., subfolders as needed)
-
-## 📤 Output:
-All new and modified files must be inside ".playwright-wizard-mcp/" in the project root.
-`,
+  content: `# Step 3: Setup Test Infrastructure\n\nSet up the foundational test infrastructure.\n\n## 🔧 Required MCP Tools\n\n### Filesystem MCP (@modelcontextprotocol/server-filesystem)\n- **create_directory(path)** - Create .playwright-wizard-mcp if not exists\n- **read_file(path)** - Read .playwright-wizard-mcp/project-config.md\n- **write_file(path, content)** - Create config and helper files in .playwright-wizard-mcp/\n\n## 📋 Actions:\n1. Use **create_directory** to create .playwright-wizard-mcp directory\n2. Use **read_file** to load .playwright-wizard-mcp/project-config.md\n3. Write all config, fixtures, helpers, and output files to .playwright-wizard-mcp/ (e.g., .playwright-wizard-mcp/playwright.config.ts)\n4. Maintain clear structure under .playwright-wizard-mcp/ (e.g., subfolders as needed)\n\n## 📤 Output:\nAll new and modified files must be inside `.playwright-wizard-mcp/` in the project root.\n`,
 };
 
 export const generatePageObjectsTool: MCPTool = {
-  name: "generate-page-objects",
+  name: "playwright-wizard:generate-page-objects",
   title: "📋 Generate Page Objects",
   description: "Step 4: Generate page objects - create type-safe page object models; all output goes into .playwright-wizard-mcp/pages/",
   inputSchema: {
@@ -81,28 +62,11 @@ export const generatePageObjectsTool: MCPTool = {
       ]
     }
   },
-  content: `# Step 4: Generate Page Objects
-
-Create page object models for each page identified in the analysis.
-
-## 🔧 Required MCP Tools
-
-### Filesystem MCP (@modelcontextprotocol/server-filesystem)
-- **read_file(path)** - Read .playwright-wizard-mcp/pages.md, selector-strategy.md
-- **write_file(path, content)** - Create each page object in .playwright-wizard-mcp/pages/
-
-## 📋 Actions:
-1. Use **read_file** to load .playwright-wizard-mcp/pages.md and selector-strategy.md
-2. Create a class file per page in .playwright-wizard-mcp/pages/
-3. Optionally use **playwright_selector** for selector validation
-
-## 📤 Output:
-All page object models must be written to ".playwright-wizard-mcp/pages/".
-`,
+  content: `# Step 4: Generate Page Objects\n\nCreate page object models for each page identified in the analysis.\n\n## 🔧 Required MCP Tools\n\n### Filesystem MCP (@modelcontextprotocol/server-filesystem)\n- **read_file(path)** - Read .playwright-wizard-mcp/pages.md, selector-strategy.md\n- **write_file(path, content)** - Create each page object in .playwright-wizard-mcp/pages/\n\n## 📋 Actions:\n1. Use **read_file** to load .playwright-wizard-mcp/pages.md and selector-strategy.md\n2. Create a class file per page in .playwright-wizard-mcp/pages/\n3. Optionally use **playwright_selector** for selector validation\n\n## 📤 Output:\nAll page object models must be written to `.playwright-wizard-mcp/pages/`.\n`,
 };
 
 export const implementTestSuiteTool: MCPTool = {
-  name: "implement-test-suite",
+  name: "playwright-wizard:implement-test-suite",
   title: "✅ Implement Test Suite",
   description: "Step 5: Implement & verify tests - write complete test suite using page objects. All tests and artifacts go to .playwright-wizard-mcp/tests/ and .playwright-wizard-mcp/reports/.",
   inputSchema: {
@@ -133,27 +97,5 @@ export const implementTestSuiteTool: MCPTool = {
       ]
     }
   },
-  content: `# Step 5: Implement Test Suite
-
-Implement the complete test suite based on the test plan.
-
-## 🔧 Required MCP Tools
-
-### Filesystem MCP (@modelcontextprotocol/server-filesystem)
-- **read_file(path)** - Read .playwright-wizard-mcp/test-plan.md and page objects
-- **list_directory(path)** - List .playwright-wizard-mcp/pages/
-- **write_file(path, content)** - Create test spec files in .playwright-wizard-mcp/tests/
-
-### Optional: Playwright MCP
-- **playwright_run_tests()** - Run tests for verification
-
-## 📋 Actions:
-1. Use **read_file** to load .playwright-wizard-mcp/test-plan.md
-2. Use **list_directory** on .playwright-wizard-mcp/pages/
-3. Write test specs to .playwright-wizard-mcp/tests/
-4. Optionally use **playwright_run_tests** for verification
-
-## 📤 Output:
-All test specs and reports are to be created under ".playwright-wizard-mcp/tests/" and ".playwright-wizard-mcp/reports/".
-`,
+  content: `# Step 5: Implement Test Suite\n\nImplement the complete test suite based on the test plan.\n\n## 🔧 Required MCP Tools\n\n### Filesystem MCP (@modelcontextprotocol/server-filesystem)\n- **read_file(path)** - Read .playwright-wizard-mcp/test-plan.md and page objects\n- **list_directory(path)** - List .playwright-wizard-mcp/pages/\n- **write_file(path, content)** - Create test spec files in .playwright-wizard-mcp/tests/\n\n### Optional: Playwright MCP\n- **playwright_run_tests()** - Run tests for verification\n\n## 📋 Actions:\n1. Use **read_file** to load .playwright-wizard-mcp/test-plan.md\n2. Use **list_directory** on .playwright-wizard-mcp/pages/\n3. Write test specs to .playwright-wizard-mcp/tests/\n4. Optionally use **playwright_run_tests** for verification\n\n## 📤 Output:\nAll test specs and reports are to be created under `.playwright-wizard-mcp/tests/` and `.playwright-wizard-mcp/reports/`.\n`,
 };
