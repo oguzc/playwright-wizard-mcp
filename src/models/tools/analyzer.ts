@@ -81,11 +81,11 @@ Before running this tool, ensure these MCP servers are available:
    - Score HTML quality (1-10)
 
 4. **Create Strategy Files**
-   - Create `.playwright-wizard-mcp/project-config.md` with tech stack and architecture
-   - Create `.playwright-wizard-mcp/pages.md` with page inventory and descriptions
-   - Create `.playwright-wizard-mcp/selector-strategy.md` with recommended selector approaches
+   - Create ".playwright-wizard-mcp/project-config.md" with tech stack and architecture
+   - Create ".playwright-wizard-mcp/pages.md" with page inventory and descriptions
+   - Create ".playwright-wizard-mcp/selector-strategy.md" with recommended selector approaches
 
 ## 📤 Output:
-All files must be created inside the `.playwright-wizard-mcp` folder in the project root.
+All files must be created inside the ".playwright-wizard-mcp" folder in the project root.
 `,
 };

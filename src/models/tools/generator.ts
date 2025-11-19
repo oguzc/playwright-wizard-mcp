@@ -45,7 +45,7 @@ Set up the foundational test infrastructure.
 4. Maintain clear structure under .playwright-wizard-mcp/ (e.g., subfolders as needed)
 
 ## 📤 Output:
-All new and modified files must be inside `.playwright-wizard-mcp/` in the project root.
+All new and modified files must be inside ".playwright-wizard-mcp/" in the project root.
 `,
 };
 
@@ -97,7 +97,7 @@ Create page object models for each page identified in the analysis.
 3. Optionally use **playwright_selector** for selector validation
 
 ## 📤 Output:
-All page object models must be written to `.playwright-wizard-mcp/pages/`.
+All page object models must be written to ".playwright-wizard-mcp/pages/".
 `,
 };
 
@@ -154,6 +154,6 @@ Implement the complete test suite based on the test plan.
 4. Optionally use **playwright_run_tests** for verification
 
 ## 📤 Output:
-All test specs and reports are to be created under `.playwright-wizard-mcp/tests/` and `.playwright-wizard-mcp/reports/`.
+All test specs and reports are to be created under ".playwright-wizard-mcp/tests/" and ".playwright-wizard-mcp/reports/".
 `,
 };
